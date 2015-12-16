@@ -7,7 +7,40 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <Page.BottomAppBar>
+        <CommandBar ClosedDisplayMode="Compact">
+            <AppBarButton Icon="Add"
+                          Label="New category"
+                          Click="OnCreateNewCategoryClick"/>
+        </CommandBar>
+    </Page.BottomAppBar>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid Name="newCategory"
+              VerticalAlignment="Center" 
+              Background="Aquamarine">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="80*"/>
+                <ColumnDefinition Width="20*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Name:"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Stretch"
+                       Grid.Row="0"
+                       Grid.Column="0"/>
+            <TextBox HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center"
+                     Grid.Row="0"
+                     Grid.Column="1"/>
+            <Button Content="Add"
+                    HorizontalAlignment="Stretch"
+                    Grid.Row="0" 
+                    Grid.Column="2"/>
+        </Grid>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="46*"/>
@@ -33,7 +66,7 @@
             <Rectangle Grid.Row="2" Grid.ColumnSpan="2" Fill="#0070C0"/>
             <Rectangle Grid.Row="3" Grid.ColumnSpan="2" Fill="#0070C0"/>
             <Border BorderBrush="White"
-                    BorderThickness="0,0,0,4"
+                    BorderThickness="0,0,0,3"
                     Grid.Row="2"
                     Grid.Column="1">
             </Border>

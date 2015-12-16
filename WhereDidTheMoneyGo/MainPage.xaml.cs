@@ -25,6 +25,19 @@ namespace WhereDidTheMoneyGo
         public MainPage()
         {
             this.InitializeComponent();
+            this.newCategory.Visibility = Visibility.Collapsed;
+        }
+
+        private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
+        {
+            if(this.newCategory.Visibility == Visibility.Collapsed)
+            {
+                this.newCategory.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.newCategory.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }
