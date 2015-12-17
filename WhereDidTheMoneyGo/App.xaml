@@ -4,5 +4,35 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WhereDidTheMoneyGo"
     RequestedTheme="Light">
+    <Application.Resources>
+        <Style x:Key="TitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="TextAlignment" Value="Right"/>
+        </Style>
 
+        <Style  x:Key="DefaultTextBoxStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+
+        <Style x:Key="AmountsTextBoxStyle" TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBoxStyle}">
+            <Setter Property="TextAlignment" Value="Right"/>
+        </Style>
+
+        <Style x:Key="SubCategoryAmountsTextBoxStyle" TargetType="TextBlock" BasedOn="{StaticResource AmountsTextBoxStyle}">
+            <Setter Property="FontSize" Value="15"/>
+        </Style>
+
+        <Style x:Key="CategoriesTextBoxStyle" TargetType="TextBlock"  BasedOn="{StaticResource DefaultTextBoxStyle}">
+            <Setter Property="TextAlignment" Value="Left"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+        </Style>
+
+        <Style x:Key="SubCategoriesTextBoxStyle" TargetType="TextBlock"  BasedOn="{StaticResource CategoriesTextBoxStyle}">
+            <Setter Property="FontSize" Value="15"/>
+        </Style>
+
+        <Style TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBoxStyle}">
+        </Style>
+    </Application.Resources>
 </Application>

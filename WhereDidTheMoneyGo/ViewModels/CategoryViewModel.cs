@@ -1,11 +1,12 @@
 ﻿namespace WhereDidTheMoneyGo.ViewModels
 {
+    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
 
     public class CategoryViewModel
     {
-        public string Name { get; set; }
-
-        public ICollection<CategoryItemsViewModel> Items { get; set; }
+        public IEnumerable<CategoryItemViewModel> Categories { get; set; }
     }
 }
