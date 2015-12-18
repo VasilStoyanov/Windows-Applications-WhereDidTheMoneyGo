@@ -1,0 +1,98 @@
+﻿<Page
+    x:Class="WhereDidTheMoneyGo.Pages.AddNewExpence"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WhereDidTheMoneyGo.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Border  Background="Silver">
+            <TextBlock Name="tbPageTitle" 
+                       Grid.Row="0" Grid.Column="0" 
+                       HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           FontSize="25" 
+                           FontWeight="Bold" 
+                           Text="Add expence"/>
+        </Border>
+        <StackPanel Grid.Row="1">
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <TextBlock Text="Date" Grid.Row="0" Grid.Column="0"/>
+                <TextBox PlaceholderText="Add date"  Grid.Row="0" Grid.Column="1"/>
+
+                <TextBlock Text="Category" Grid.Row="1" Grid.Column="0"/>
+                <TextBox PlaceholderText="Add category" Grid.Row="1" Grid.Column="1"/>
+
+                <TextBlock Text="Amount" Grid.Row="2" Grid.Column="0"/>
+                <TextBox PlaceholderText="Add Amount" Grid.Row="2" Grid.Column="1"/>
+    
+                <TextBlock Text="Notes" Grid.Row="3" Grid.Column="0"/>
+                <TextBox PlaceholderText="Add Notes" Grid.Row="3" Grid.Column="1"/>
+
+                <TextBlock Text="Image" Grid.Row="4" Grid.Column="0"/>
+                <TextBox PlaceholderText="Add Image" Grid.Row="4" Grid.Column="1"/>
+                
+                <Button Content="Save" HorizontalAlignment="Stretch" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"/>
+            </Grid>
+        </StackPanel>
+
+        <!--Add new Category-->
+        <Grid Grid.Row="2" 
+            Name="newCategory"
+              VerticalAlignment="Center" 
+              Background="Aquamarine"
+              Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="80*"/>
+                <ColumnDefinition Width="20*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Name:"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Stretch"
+                       Grid.Row="0"
+                       Grid.Column="0"/>
+            <TextBox HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center"
+                     Grid.Row="0"
+                     Grid.Column="1"/>
+            <Button Content="Add"
+                    HorizontalAlignment="Stretch"
+                    Grid.Row="0" 
+                    Grid.Column="2"/>
+        </Grid>
+    </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar ClosedDisplayMode="Compact">
+            <AppBarButton Icon="Add"
+                          Label="New category"
+                          Click="OnCreateNewCategoryClick"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+    
+</Page>

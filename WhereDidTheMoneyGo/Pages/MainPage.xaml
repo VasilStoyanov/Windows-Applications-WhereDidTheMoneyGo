@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="WhereDidTheMoneyGo.MainPage"
+    x:Class="WhereDidTheMoneyGo.Pages.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:WhereDidTheMoneyGo"
@@ -36,6 +36,7 @@
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -53,42 +54,32 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Border Grid.Row="0"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Background="Silver">
-                <TextBlock 
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontSize="25"
-                       FontWeight="Bold"
-                       Text="Main Page" >
-                </TextBlock>
+            <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="Silver">
+                <TextBlock HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           FontSize="25" 
+                           FontWeight="Bold" 
+                           Text="Main Page"/>
             </Border>
-            <TextBlock Grid.Row="1"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="2"
-                       HorizontalAlignment="Center"
+            <TextBlock Grid.Row="1" 
+                       Grid.Column="0" 
+                       Grid.ColumnSpan="2" 
+                       HorizontalAlignment="Center" 
                        VerticalAlignment="Center"
-                       FontSize="18"
-                       FontWeight="Bold"
-                       Text="Date" >
-            </TextBlock>
-            <TextBlock Grid.Row="2"
+                       FontSize="18" FontWeight="Bold"
+                       Text="Date" />
+            <TextBlock Grid.Row="2" 
                        Grid.Column="1"
                        HorizontalAlignment="Right"
-                       VerticalAlignment="Top"
-                       FontSize="18"
-                       FontWeight="Bold"
+                       FontSize="18" 
+                       FontWeight="Bold" 
                        Foreground="#157CC5"
-                       Text="Outflow" >
-            </TextBlock>
-            <ListBox HorizontalAlignment="Stretch"
-                          Grid.Row="3" 
-                          Grid.Column="0" 
-                          Grid.ColumnSpan="2" 
-                          ItemsSource="{Binding Categories}" 
-                          ItemTemplate="{StaticResource categoriesDataTemplate}">
+                       Text="Outflow" />
+            <ListBox Grid.Row="3" 
+                     Grid.Column="0" 
+                     Grid.ColumnSpan="2" 
+                     ItemsSource="{Binding Categories}" 
+                     ItemTemplate="{StaticResource categoriesDataTemplate}">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -96,7 +87,7 @@
                 </ListBox.ItemContainerStyle>
             </ListBox>
         </Grid>
-        
+
         <!--Add new Category-->
         <Grid Grid.Row="1" 
             Name="newCategory"
