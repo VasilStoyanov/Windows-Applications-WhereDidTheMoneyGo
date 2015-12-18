@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:WhereDidTheMoneyGo.ViewModels"
+    xmlns:attachedProperties="using:WhereDidTheMoneyGo.AttachedProperties"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -93,7 +94,8 @@
             Name="newCategory"
               VerticalAlignment="Center" 
               Background="Aquamarine"
-              Visibility="Collapsed">
+              Visibility="Collapsed"
+              attachedProperties:AnimationsProperties.ShowHideValue="True">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -108,7 +110,8 @@
                        HorizontalAlignment="Stretch"
                        Grid.Row="0"
                        Grid.Column="0"/>
-            <TextBox HorizontalAlignment="Stretch"
+            <TextBox Name="nameOfCategory"
+                     HorizontalAlignment="Stretch"
                      VerticalAlignment="Center"
                      Grid.Row="0"
                      Grid.Column="1"/>
@@ -121,7 +124,8 @@
 
     <Page.BottomAppBar>
         <CommandBar ClosedDisplayMode="Compact">
-            <AppBarButton Icon="Add"
+            <AppBarButton Name="appBarButton"
+                          Icon="Add"
                           Label="New category"
                           Click="OnCreateNewCategoryClick"/>
         </CommandBar>

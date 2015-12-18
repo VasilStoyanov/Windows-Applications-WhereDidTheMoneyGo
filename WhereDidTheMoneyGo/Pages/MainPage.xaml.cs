@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using WhereDidTheMoneyGo.AttachedProperties;
 using WhereDidTheMoneyGo.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -51,20 +52,21 @@ namespace WhereDidTheMoneyGo.Pages
             contentViewModel.Categories = categories;
 
             this.DataContext = contentViewModel;
-
-            this.newCategory.Visibility = Visibility.Collapsed;
         }
 
         private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
         {
-            if (this.newCategory.Visibility == Visibility.Collapsed)
+            var oldValue = AnimationsProperties.GetShowHideValue(this.newCategory);
+            if(oldValue)
             {
-                this.newCategory.Visibility = Visibility.Visible;
+                this.appBarButton.Icon = new SymbolIcon(Symbol.Remove);
             }
             else
             {
-                this.newCategory.Visibility = Visibility.Collapsed;
+                this.appBarButton.Icon = new SymbolIcon(Symbol.Add);
             }
+
+            AnimationsProperties.SetShowHideValue(this.newCategory, !oldValue);
         }
     }
 }
