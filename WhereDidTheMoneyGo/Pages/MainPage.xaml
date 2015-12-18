@@ -47,54 +47,59 @@
 
     <Grid Background="#d5e0ff">
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="4.5*"/>
+            <RowDefinition Height="0.280*"/>
+            <RowDefinition Height="0.6*"/>
         </Grid.RowDefinitions>
-
+        <TextBlock Name="notificationBox"
+                   Grid.Row="1"
+                   FontSize="24"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
         <Grid Name="mainGrid" 
-              Background="#d5e0ff"
+              Background="CornflowerBlue"
               Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2.6*"/>
+                <ColumnDefinition Width="0.215*"/>
                 <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <Border Grid.Row="0"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Background="CornflowerBlue">
-                <TextBlock HorizontalAlignment="Center" 
+            <TextBlock HorizontalAlignment="Right" 
+                           VerticalAlignment="Center" 
+                           FontSize="25"                           
+                           Grid.Row="0"
+                           Grid.Column="0"
+                           FontFamily="Segoe Print"
+                           Text="Where did the"/>
+            <Image Source="/Assets/BagOfMoney.png"
+                   Grid.Row="0"
+                   Grid.Column="1"/>
+            <TextBlock HorizontalAlignment="Left" 
                            VerticalAlignment="Center" 
                            FontSize="25" 
-                           FontWeight="Bold" 
-                           Text="Main Page"/>
-            </Border>
+                           Grid.Row="0"
+                           Grid.Column="2"
+                           FontFamily="Segoe Print"
+                           Text="go?"/>
             <Rectangle Fill="#d5e0ff"
                        Grid.Row="1"
-                       Grid.ColumnSpan="2"/>
+                       Grid.ColumnSpan="3"/>
             <DatePicker Name="datePicker"
                         Background="#d5e0ff"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        Grid.ColumnSpan="2"
+                        Grid.ColumnSpan="3"
                         Grid.Row="1"/>
-            <TextBlock Grid.Row="2" 
-                       Grid.Column="1"
-                       HorizontalAlignment="Right"
-                       FontSize="18" 
-                       FontWeight="Bold" 
-                       Foreground="#157CC5"
-                       Text="Outflow" />
             <ListBox Grid.Row="3" 
                      Grid.Column="0" 
-                     Grid.ColumnSpan="2" 
+                     Grid.ColumnSpan="3" 
                      ItemsSource="{Binding Categories}"
-                     
                      ItemTemplate="{StaticResource categoriesDataTemplate}">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
@@ -106,15 +111,15 @@
         </Grid>
 
         <!--Add new Category-->
-        <Grid Grid.Row="1" 
-            Name="newCategory"
-              VerticalAlignment="Center" 
-              Background="Aquamarine"
+        <Grid Grid.Row="2"
+              Name="newCategory"
+              VerticalAlignment="Bottom" 
+              Background="CornflowerBlue"
               Visibility="Collapsed"
               attachedProperties:AnimationsProperties.ShowHideValue="True">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="8.5*"/>
