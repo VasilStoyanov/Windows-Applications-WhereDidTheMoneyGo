@@ -83,13 +83,18 @@
                        Foreground="#157CC5"
                        Text="Outflow" >
             </TextBlock>
-            <ItemsControl HorizontalAlignment="Stretch"
+            <ListBox HorizontalAlignment="Stretch"
                           Grid.Row="3" 
                           Grid.Column="0" 
                           Grid.ColumnSpan="2" 
                           ItemsSource="{Binding Categories}" 
                           ItemTemplate="{StaticResource categoriesDataTemplate}">
-            </ItemsControl>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
         </Grid>
         
         <!--Add new Category-->
