@@ -80,7 +80,7 @@ namespace WhereDidTheMoneyGo.Pages
                 var newCategory = new CategoryItemViewModel()
                 {
                     Category = new Category(newCategoryName),
-                    Items = categoryItems,
+                    Items = new ObservableCollection<SubCategoryItemViewModel>(),
                     Amount = DefaultValues.DefaultCategoryValue
                 };
 

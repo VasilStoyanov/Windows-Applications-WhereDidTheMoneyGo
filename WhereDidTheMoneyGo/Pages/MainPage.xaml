@@ -8,7 +8,7 @@
     xmlns:viewModels="using:WhereDidTheMoneyGo.ViewModels"
     xmlns:attachedProperties="using:WhereDidTheMoneyGo.AttachedProperties"
     mc:Ignorable="d">
-
+    
     <Page.Resources>
         <DataTemplate x:Key="categoriesDataTemplate">
             <StackPanel>
@@ -45,13 +45,15 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="#d5e0ff">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
-        <Grid Name="mainGrid" Grid.Row="0">
+        <Grid Name="mainGrid" 
+              Background="#d5e0ff"
+              Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="30"/>
@@ -123,8 +125,7 @@
                      VerticalAlignment="Center"
                      Grid.Row="0"
                      PlaceholderText="Name"
-                     Grid.Column="0"
-                     
+                     Grid.Column="0"                
                      KeyUp="ValidateText"/>
             <Button Content="Add"
                     HorizontalAlignment="Stretch"
@@ -135,7 +136,7 @@
     </Grid>
 
     <Page.BottomAppBar>
-        <CommandBar ClosedDisplayMode="Compact">
+        <CommandBar Background="CornflowerBlue">
             <AppBarButton Name="appBarButton"
                           Icon="Add"
                           Label="New category"
