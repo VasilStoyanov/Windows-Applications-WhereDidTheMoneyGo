@@ -1,6 +1,8 @@
 ﻿namespace WhereDidTheMoneyGo.AttachedProperties
 {
     using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Windows.UI.Xaml;
 
     public class AnimationsProperties
@@ -47,7 +49,7 @@
                     element.Opacity -= 0.1;
 
                 };
-                timer.Interval = TimeSpan.FromMilliseconds(25);
+                timer.Interval = TimeSpan.FromMilliseconds(15);
                 timer.Start();
             }
             else
@@ -64,7 +66,7 @@
                     element.Opacity += 0.1;
 
                 };
-                timer.Interval = TimeSpan.FromMilliseconds(25);
+                timer.Interval = TimeSpan.FromMilliseconds(15);
                 timer.Start();
             }
         }

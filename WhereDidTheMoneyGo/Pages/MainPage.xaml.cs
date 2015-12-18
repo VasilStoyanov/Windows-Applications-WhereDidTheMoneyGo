@@ -40,8 +40,8 @@ namespace WhereDidTheMoneyGo.Pages
             items.Add(item2);
             items.Add(item3);
 
-            var category1 = new CategoryItemViewModel() { Category = Category.Food, Items=items, Amount=1000};
-            var category2 = new CategoryItemViewModel() { Category = Category.Housing, Items=items, Amount=938};
+            var category1 = new CategoryItemViewModel() { Category = Category.Food, Items = items, Amount = 1000 };
+            var category2 = new CategoryItemViewModel() { Category = Category.Housing, Items = items, Amount = 938 };
 
             var categories = new List<CategoryItemViewModel>();
 
@@ -57,7 +57,9 @@ namespace WhereDidTheMoneyGo.Pages
         private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
         {
             var oldValue = AnimationsProperties.GetShowHideValue(this.newCategory);
-            if(oldValue)
+            AnimationsProperties.SetShowHideValue(this.newCategory, !oldValue);
+
+            if (oldValue)
             {
                 this.appBarButton.Icon = new SymbolIcon(Symbol.Remove);
             }
@@ -65,8 +67,6 @@ namespace WhereDidTheMoneyGo.Pages
             {
                 this.appBarButton.Icon = new SymbolIcon(Symbol.Add);
             }
-
-            AnimationsProperties.SetShowHideValue(this.newCategory, !oldValue);
         }
     }
 }
