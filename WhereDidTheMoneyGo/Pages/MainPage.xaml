@@ -17,8 +17,15 @@
                         <ColumnDefinition Width="{Binding ElementName=mainGrid,Path=ColumnDefinitions[0].Width}"/>
                         <ColumnDefinition Width="{Binding ElementName=mainGrid,Path=ColumnDefinitions[1].Width}"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Category}" Style="{StaticResource CategoriesTextBoxStyle}"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Amount}" Style="{StaticResource AmountsTextBoxStyle}"/>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Text="{Binding Category.Name}"
+                               Style="{StaticResource CategoriesTextBoxStyle}"/>
+                    
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="1"
+                               Text="{Binding Amount}"                              
+                               Style="{StaticResource AmountsTextBoxStyle}"/>
                 </Grid>
                 <ItemsControl ItemsSource="{Binding Items}">
                     <ItemsControl.ItemTemplate>
@@ -65,11 +72,10 @@
                            FontWeight="Bold" 
                            Text="Main Page"/>
             </Border>
-            <Rectangle Name="pesho" 
-                       Fill="#d5e0ff"
+            <Rectangle Fill="#d5e0ff"
                        Grid.Row="1"
                        Grid.ColumnSpan="2"/>
-            <DatePicker Name="dateTime"
+            <DatePicker Name="datePicker"
                         Background="#d5e0ff"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
@@ -85,7 +91,8 @@
             <ListBox Grid.Row="3" 
                      Grid.Column="0" 
                      Grid.ColumnSpan="2" 
-                     ItemsSource="{Binding Categories}" 
+                     ItemsSource="{Binding Categories}"
+                     
                      ItemTemplate="{StaticResource categoriesDataTemplate}">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
@@ -108,24 +115,22 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20*"/>
-                <ColumnDefinition Width="80*"/>
-                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="8.5*"/>
+                <ColumnDefinition Width="1.5*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Name:"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Stretch"
-                       Grid.Row="0"
-                       Grid.Column="0"/>
             <TextBox Name="nameOfCategory"
                      HorizontalAlignment="Stretch"
                      VerticalAlignment="Center"
                      Grid.Row="0"
-                     Grid.Column="1"/>
+                     PlaceholderText="Name"
+                     Grid.Column="0"
+                     
+                     KeyUp="ValidateText"/>
             <Button Content="Add"
                     HorizontalAlignment="Stretch"
                     Grid.Row="0" 
-                    Grid.Column="2"/>
+                    Grid.Column="1"
+                    Click="OnCreateNewCategoryClick"/>
         </Grid>
     </Grid>
 
@@ -134,7 +139,7 @@
             <AppBarButton Name="appBarButton"
                           Icon="Add"
                           Label="New category"
-                          Click="OnCreateNewCategoryClick"/>
+                          Click="OnShowNewCategoryMenuClick"/>
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

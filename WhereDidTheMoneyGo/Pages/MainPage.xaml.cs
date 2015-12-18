@@ -5,9 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using WhereDidTheMoneyGo.AttachedProperties;
+using WhereDidTheMoneyGo.Common;
 using WhereDidTheMoneyGo.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,6 +27,11 @@ namespace WhereDidTheMoneyGo.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private bool categoryNameIsValid = false;
+        // Temporary
+        private ObservableCollection<CategoryItemViewModel> categories = new ObservableCollection<CategoryItemViewModel>();
+        private ObservableCollection<SubCategoryItemViewModel> categoryItems = new ObservableCollection<SubCategoryItemViewModel>();
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -34,16 +41,12 @@ namespace WhereDidTheMoneyGo.Pages
             var item2 = new SubCategoryItemViewModel() { Category = "Heating", Amount = 300 };
             var item3 = new SubCategoryItemViewModel() { Category = "Clothes", Amount = 50 };
 
-            var items = new List<SubCategoryItemViewModel>();
+            categoryItems.Add(item1);
+            categoryItems.Add(item2);
+            categoryItems.Add(item3);
 
-            items.Add(item1);
-            items.Add(item2);
-            items.Add(item3);
-
-            var category1 = new CategoryItemViewModel() { Category = Category.Food, Items = items, Amount = 1000 };
-            var category2 = new CategoryItemViewModel() { Category = Category.Housing, Items = items, Amount = 938 };
-
-            var categories = new List<CategoryItemViewModel>();
+            var category1 = new CategoryItemViewModel() { Category = new Category("Food"), Items = categoryItems, Amount = 1000 };
+            var category2 = new CategoryItemViewModel() { Category = new Category("Housing"), Items = categoryItems, Amount = 938 };
 
             categories.Add(category1);
             categories.Add(category2);
@@ -54,7 +57,7 @@ namespace WhereDidTheMoneyGo.Pages
             this.DataContext = contentViewModel;
         }
 
-        private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
+        private void OnShowNewCategoryMenuClick(object sender, RoutedEventArgs e)
         {
             var oldValue = AnimationsProperties.GetShowHideValue(this.newCategory);
             AnimationsProperties.SetShowHideValue(this.newCategory, !oldValue);
@@ -66,6 +69,58 @@ namespace WhereDidTheMoneyGo.Pages
             else
             {
                 this.appBarButton.Icon = new SymbolIcon(Symbol.Add);
+            }
+        }
+
+        private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
+        {
+            if(categoryNameIsValid)
+            {
+                var newCategoryName = this.nameOfCategory.Text;
+                var newCategory = new CategoryItemViewModel()
+                {
+                    Category = new Category(newCategoryName),
+                    Items = categoryItems,
+                    Amount = DefaultValues.DefaultCategoryValue
+                };
+
+                this.categories.Add(newCategory);
+            }
+        }
+
+        private void ValidateText(object sender, KeyRoutedEventArgs e)
+        {
+            var correct = true;
+            // Part of developer's job, lol
+            if(this.nameOfCategory.Text.ToLower().Contains(BadWords.Naughty))
+            {
+                SetBorder(!correct);
+            }
+            else if(this.nameOfCategory.Text.ToLower().Contains(BadWords.FWord))
+            {
+                SetBorder(!correct);
+            }
+            else if(this.nameOfCategory.Text.Length >= 50 || this.nameOfCategory.Text.Length == 0)
+            {
+                SetBorder(!correct);
+            }
+            else
+            {
+                SetBorder(correct);
+            }
+        }
+
+        private void SetBorder(bool correct)
+        {
+            if (correct)
+            {
+                this.nameOfCategory.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
+                this.categoryNameIsValid = true;
+            }
+            else
+            {
+                this.nameOfCategory.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+                this.categoryNameIsValid = false;
             }
         }
     }

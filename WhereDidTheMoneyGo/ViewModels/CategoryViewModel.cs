@@ -7,6 +7,23 @@
 
     public class CategoryViewModel
     {
-        public IEnumerable<CategoryItemViewModel> Categories { get; set; }
+        private ICollection<CategoryItemViewModel> categories;
+
+        public CategoryViewModel()
+        {
+            this.Categories = new ObservableCollection<CategoryItemViewModel>();
+        }
+
+        public ICollection<CategoryItemViewModel> Categories
+        {
+            get
+            {
+                return this.categories;
+            }
+            set
+            {
+                this.categories = value;
+            }
+        }
     }
 }

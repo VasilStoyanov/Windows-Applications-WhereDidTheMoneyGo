@@ -2,10 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
 
-    public class CategoryItemViewModel
+    public class CategoryItemViewModel : INotifyPropertyChanged
     {
         private ObservableCollection<SubCategoryItemViewModel> items;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public CategoryItemViewModel()
         {
