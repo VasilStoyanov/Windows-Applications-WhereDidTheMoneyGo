@@ -98,6 +98,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AttachedProperties\AnimationsProperties.cs" />
+    <Compile Include="Common\BadWords.cs" />
+    <Compile Include="Common\DefaultValues.cs" />
+    <Compile Include="Common\NotificationMessages.cs" />
+    <Compile Include="Data\Category.cs" />
+    <Compile Include="Data\Expense.cs" />
     <Compile Include="Pages\AddNewExpence.xaml.cs">
       <DependentUpon>AddNewExpence.xaml</DependentUpon>
     </Compile>
@@ -108,6 +114,7 @@
     <Compile Include="ViewModels\Category.cs" />
     <Compile Include="ViewModels\CategoryViewModel.cs" />
     <Compile Include="ViewModels\ExpenceViewModel.cs" />
+    <Compile Include="ViewModels\SubCategory.cs" />
     <Compile Include="ViewModels\SubCategoryItemViewModel.cs" />
     <Compile Include="ViewModels\CategoryItemViewModel.cs" />
   </ItemGroup>
@@ -140,6 +147,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="SQLite.UAP.2015, Version=3.9.2">
+      <Name>SQLite for Universal App Platform</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

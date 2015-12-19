@@ -1,12 +1,10 @@
 ﻿namespace WhereDidTheMoneyGo.ViewModels
 {
-    public class Category
+    public enum Category
     {
-        public Category(string name)
-        {
-            this.Name = name;
-        }
-
-        public string Name { get; set; }
+     Food,
+     Housing,
+     Persona,
+     Transportation   
     }
 }

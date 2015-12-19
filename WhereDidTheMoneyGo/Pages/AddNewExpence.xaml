@@ -12,6 +12,7 @@
             <RowDefinition Height="50"/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Border  Background="Silver">
             <TextBlock Name="tbPageTitle" 
@@ -35,29 +36,37 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                
+
                 <TextBlock Text="Date" Grid.Row="0" Grid.Column="0"/>
-                <TextBox PlaceholderText="Add date"  Grid.Row="0" Grid.Column="1"/>
+                <DatePicker Name="dpDate" Grid.Row="0" Grid.Column="1"/>
+                
 
                 <TextBlock Text="Category" Grid.Row="1" Grid.Column="0"/>
-                <TextBox PlaceholderText="Add category" Grid.Row="1" Grid.Column="1"/>
+                <TextBox Name="tbCategory" PlaceholderText="Add category" Grid.Row="1" Grid.Column="1"/>
 
-                <TextBlock Text="Amount" Grid.Row="2" Grid.Column="0"/>
-                <TextBox PlaceholderText="Add Amount" Grid.Row="2" Grid.Column="1"/>
-    
-                <TextBlock Text="Notes" Grid.Row="3" Grid.Column="0"/>
-                <TextBox PlaceholderText="Add Notes" Grid.Row="3" Grid.Column="1"/>
+                <TextBlock Text="SubCategory" Grid.Row="2" Grid.Column="0"/>
+                <TextBox Name="tbSubCategory" PlaceholderText="Add sub-category" Grid.Row="2" Grid.Column="1"/>
 
-                <TextBlock Text="Image" Grid.Row="4" Grid.Column="0"/>
-                <TextBox PlaceholderText="Add Image" Grid.Row="4" Grid.Column="1"/>
-                
-                <Button Content="Save" HorizontalAlignment="Stretch" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"/>
+                <TextBlock Text="Amount" Grid.Row="3" Grid.Column="0"/>
+                <TextBox Name="tbAmount" PlaceholderText="Add Amount" Grid.Row="3" Grid.Column="1"/>
+
+                <TextBlock Text="Notes" Grid.Row="4" Grid.Column="0"/>
+                <TextBox Name="tbNotes" PlaceholderText="Add Notes" Grid.Row="4" Grid.Column="1"/>
+
+                <TextBlock Text="Image" Grid.Row="5" Grid.Column="0"/>
+                <TextBox Name="tbImageUrl" PlaceholderText="Add Image" Grid.Row="5" Grid.Column="1"/>
+
+                <Button Content="Save" Click="OnSaveButtonClick" HorizontalAlignment="Stretch" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"/>
             </Grid>
+        </StackPanel>
+        <StackPanel Grid.Row="2">
+            <TextBlock Name="tbExpenseLIst"/>
         </StackPanel>
 
         <!--Add new Category-->
-        <Grid Grid.Row="2" 
+        <Grid Grid.Row="3" 
             Name="newCategory"
               VerticalAlignment="Center" 
               Background="Aquamarine"
@@ -94,5 +103,5 @@
                           Click="OnCreateNewCategoryClick"/>
         </CommandBar>
     </Page.BottomAppBar>
-    
+
 </Page>
