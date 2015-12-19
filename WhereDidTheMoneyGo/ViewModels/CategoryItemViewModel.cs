@@ -13,7 +13,7 @@
             this.subCategories = new ObservableCollection<SubCategoryItemViewModel>();
         }
 
-        public Category Category { get; set; }
+        public CategoryViewModel Category { get; set; }
 
         public double Amount { get; set; }
 

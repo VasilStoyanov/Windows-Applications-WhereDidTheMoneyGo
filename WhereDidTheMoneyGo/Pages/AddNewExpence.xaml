@@ -7,6 +7,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <DataTemplate x:Key="CategoriesDataTemplate">
+            <StackPanel>
+                <TextBlock Text="{Binding CategoryName}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="SubCategoriesDataTemplate">
+            <StackPanel>
+                <TextBlock Text="{Binding SubCategoryName}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+    
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -44,18 +57,29 @@
                 
 
                 <TextBlock Text="Category" Grid.Row="1" Grid.Column="0"/>
-                <TextBox Name="tbCategory" PlaceholderText="Add category" Grid.Row="1" Grid.Column="1"/>
+                <ComboBox Name="tbCategory" 
+                          ItemsSource="{Binding Categories}" 
+                          ItemTemplate="{StaticResource CategoriesDataTemplate}" 
+                          SelectedValuePath="CategoryName"
+                          SelectionChanged="OntbCategorySelectionChanged"
+                          PlaceholderText="Add category" 
+                          Grid.Row="1" 
+                          Grid.Column="1" />
 
                 <TextBlock Text="SubCategory" Grid.Row="2" Grid.Column="0"/>
-                <TextBox Name="tbSubCategory" PlaceholderText="Add sub-category" Grid.Row="2" Grid.Column="1"/>
-
+                <ComboBox Name="tbSubCategory" 
+                          ItemsSource="{Binding SubCategories}" 
+                          ItemTemplate="{StaticResource SubCategoriesDataTemplate}" 
+                          SelectedValuePath="SubCategoryName"
+                          Grid.Row="2" Grid.Column="1"/>
+                
                 <TextBlock Text="Amount" Grid.Row="3" Grid.Column="0"/>
                 <TextBox Name="tbAmount" PlaceholderText="Add Amount" Grid.Row="3" Grid.Column="1"/>
 
                 <TextBlock Text="Description" Grid.Row="4" Grid.Column="0"/>
                 <TextBox Name="tbDescription" PlaceholderText="Add Notes" Grid.Row="4" Grid.Column="1"/>
 
-                <TextBlock Text="Image" Grid.Row="5" Grid.Column="0"/>
+                <TextBlock Text="{Binding CurrentCategory}" Grid.Row="5" Grid.Column="0"/>
                 <TextBox Name="tbImageUrl" PlaceholderText="Add Image" Grid.Row="5" Grid.Column="1"/>
 
                 <Button Content="Save" Click="OnSaveButtonClick" HorizontalAlignment="Stretch" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"/>

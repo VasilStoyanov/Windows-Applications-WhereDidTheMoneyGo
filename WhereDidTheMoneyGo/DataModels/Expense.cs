@@ -1,4 +1,4 @@
-﻿namespace WhereDidTheMoneyGo.Data
+﻿namespace WhereDidTheMoneyGo.DataModels
 {
     using System;
     using SQLite.Net.Attributes;
@@ -15,7 +15,7 @@
         public int CategoryId { get; set; }
 
         [ManyToOne]
-        public Category Category { get; set; }
+        public Category Category { get; set; }  
 
         [ForeignKey(typeof(SubCategory))]
         public int SubCategoryId { get; set; }

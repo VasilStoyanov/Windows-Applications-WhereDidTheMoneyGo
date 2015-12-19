@@ -9,7 +9,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
-using WhereDidTheMoneyGo.Data;
+using WhereDidTheMoneyGo.DataModels;
+using WhereDidTheMoneyGo.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -34,24 +35,24 @@ namespace WhereDidTheMoneyGo.Pages
         {
             this.InitializeComponent();
             this.InitAsync();
-
+            this.ViewModel = new AddExpenseViewModel();
 
             this.newCategory.Visibility = Visibility.Collapsed;
         }
 
-        private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
+        public AddExpenseViewModel ViewModel
         {
-            if (this.newCategory.Visibility == Visibility.Collapsed)
+            get
             {
-                this.newCategory.Visibility = Visibility.Visible;
+                return this.DataContext as AddExpenseViewModel;
             }
-            else
+            set
             {
-                this.newCategory.Visibility = Visibility.Collapsed;
+                this.DataContext = value;
             }
         }
 
-        private SQLiteAsyncConnection GetDbConnectionAsync()
+        public SQLiteAsyncConnection GetDbConnectionAsync()
         {
             var dbFilePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "db.sqlite");
 
@@ -67,7 +68,7 @@ namespace WhereDidTheMoneyGo.Pages
             return asyncConnection;
         }
 
-        private async void InitAsync()
+        public async void InitAsync()
         {
             var connection = this.GetDbConnectionAsync();
             await connection.CreateTableAsync<SubCategory>();
@@ -165,6 +166,60 @@ namespace WhereDidTheMoneyGo.Pages
                 }
                 await connection.UpdateWithChildrenAsync(categoryTransportation);
             }
+
+
+            var allCategories = await this.GetAllCategoriesAsync();
+            foreach(var category in allCategories)
+            {
+                var newCategoryViewModel = new CategoryViewModel2 { CategoryName = category.Name };
+                this.ViewModel.Categories.Add(newCategoryViewModel);
+            }
+        }
+
+        public async Task<List<Category>> GetAllCategoriesAsync()
+        {
+            var connection = this.GetDbConnectionAsync();
+            var result = await connection.Table<Category>().ToListAsync();
+            return result;
+        }
+
+        public async Task<Category> GetCategoriesAsync(string categoryName)
+        {
+            var connection = this.GetDbConnectionAsync();
+            var result = await connection.Table<Category>()
+                                        .Where(x => x.Name == categoryName)
+                                        .FirstOrDefaultAsync();
+            return result;
+        }
+
+        public async Task<SubCategory> GetSubCategoriesAsync(string subCategoryName)
+        {
+            var connection = this.GetDbConnectionAsync();
+            var result = await connection.Table<SubCategory>()
+                                        .Where(x => x.Name == subCategoryName)
+                                        .FirstOrDefaultAsync();
+            return result;
+        }
+
+        public async Task<List<SubCategory>> GetSubCategoriesByIdAsync(int categoryId)
+        {
+            var connection = this.GetDbConnectionAsync();
+            var result = await connection.Table<SubCategory>()
+                                        .Where(x => x.CategoryId == categoryId)
+                                        .ToListAsync();
+            return result;
+        }
+
+        private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
+        {
+            if (this.newCategory.Visibility == Visibility.Collapsed)
+            {
+                this.newCategory.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.newCategory.Visibility = Visibility.Collapsed;
+            }
         }
 
         private async Task<int> InsertExpenceAsync(Expense item)
@@ -181,8 +236,8 @@ namespace WhereDidTheMoneyGo.Pages
             var amount = 0.0;
             double.TryParse(this.tbAmount.Text, out amount);
             var date = this.dpDate.Date.UtcDateTime;
-            var category = await this.GetCategoriesAsync(this.tbCategory.Text);
-            var subCategory = await this.GetSubCategoriesAsync(this.tbSubCategory.Text);
+            var category = await this.GetCategoriesAsync(this.tbCategory.SelectedValue.ToString());
+            var subCategory = await this.GetSubCategoriesAsync(this.tbSubCategory.SelectedValue.ToString());
 
             var item = new Expense
             {
@@ -195,48 +250,25 @@ namespace WhereDidTheMoneyGo.Pages
             };
 
             await this.InsertExpenceAsync(item);
+        }
 
-            // Shows the entered data - to be deleted
-            var userData = await this.GetAllExpensesAsync();
-            var userDataAsString = new StringBuilder();
-            foreach (var userItem in userData)
+        private async void OntbCategorySelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Clear current selection
+            this.tbSubCategory.SelectedIndex = -1;
+
+            // Clear the current SubCategory List
+            this.ViewModel.SubCategories.Clear();
+
+            // Add new list of sub-category items
+            this.ViewModel.CurrentCategory = this.tbCategory.SelectedValue.ToString();
+            var category = await this.GetCategoriesAsync(this.ViewModel.CurrentCategory);
+            var allSubCategories = await this.GetSubCategoriesByIdAsync(category.Id);
+            foreach (var item in allSubCategories)
             {
-                userDataAsString.AppendLine(userItem.ToString());
+                var newSubCategoryViewModel = new SubCategoryViewModel { SubCategoryName = item.Name };
+                this.ViewModel.SubCategories.Add(newSubCategoryViewModel);
             }
-
-            this.tbExpenseLIst.Text = userDataAsString.ToString();
-        }
-
-        private async Task<List<Category>> GetAllCategoriesAsync()
-        {
-            var connection = this.GetDbConnectionAsync();
-            var result = await connection.Table<Category>().ToListAsync();
-            return result;
-        }
-
-        private async Task<Category> GetCategoriesAsync(string categoryName)
-        {
-            var connection = this.GetDbConnectionAsync();
-            var result = await connection.Table<Category>()
-                                        .Where(x => x.Name == categoryName)
-                                        .FirstOrDefaultAsync();
-            return result;
-        }
-
-        private async Task<SubCategory> GetSubCategoriesAsync(string subCategoryName)
-        {
-            var connection = this.GetDbConnectionAsync();
-            var result = await connection.Table<SubCategory>()
-                                        .Where(x => x.Name == subCategoryName)
-                                        .FirstOrDefaultAsync();
-            return result;
-        }
-
-        private async Task<List<Expense>> GetAllExpensesAsync()
-        {
-            var connection = this.GetDbConnectionAsync();
-            var result = await connection.GetAllWithChildrenAsync<Expense>();
-            return result;
         }
     }
 }
