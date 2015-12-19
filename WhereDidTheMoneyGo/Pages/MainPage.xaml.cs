@@ -50,11 +50,11 @@ namespace WhereDidTheMoneyGo.Pages
             categoryItems.Add(item2);
             categoryItems.Add(item3);
 
-            var category1 = new CategoryItemViewModel() { Category = Category.Food, Items = categoryItems, Amount = 1000 };
+            var category1 = new CategoryItemViewModel() { Category = Category.Food, SubCategories = categoryItems, Amount = 1000 };
             this.categoryNames.Add("food");
             this.categories.Add(category1);
 
-            var category2 = new CategoryItemViewModel() { Category = Category.Housing, Items = categoryItems, Amount = 938 };
+            var category2 = new CategoryItemViewModel() { Category = Category.Housing, SubCategories = categoryItems, Amount = 938 };
             this.categoryNames.Add("housing");
             this.categories.Add(category2);
 
@@ -88,7 +88,7 @@ namespace WhereDidTheMoneyGo.Pages
                 var newCategory = new CategoryItemViewModel()
                 {
                     Category = Category.Food, // TODO - fix it later
-                    Items = new ObservableCollection<SubCategoryItemViewModel>(),
+                    SubCategories = new ObservableCollection<SubCategoryItemViewModel>(),
                     Amount = DefaultValues.DefaultCategoryValue
                 };
 

@@ -4,21 +4,19 @@
     using System.Collections.ObjectModel;
     using System.ComponentModel;
 
-    public class CategoryItemViewModel : INotifyPropertyChanged
+    public class CategoryItemViewModel
     {
-        private ObservableCollection<SubCategoryItemViewModel> items;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
+        private ObservableCollection<SubCategoryItemViewModel> subCategories;
+        
         public CategoryItemViewModel()
         {
-            this.items = new ObservableCollection<SubCategoryItemViewModel>();
+            this.subCategories = new ObservableCollection<SubCategoryItemViewModel>();
         }
 
         public Category Category { get; set; }
 
         public double Amount { get; set; }
 
-        public IEnumerable<SubCategoryItemViewModel> Items { get; set; }
+        public IEnumerable<SubCategoryItemViewModel> SubCategories { get; set; }
     }
 }

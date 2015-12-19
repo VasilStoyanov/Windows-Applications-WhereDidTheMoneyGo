@@ -1,6 +1,7 @@
 ﻿using SQLite.Net;
 using SQLite.Net.Async;
 using SQLite.Net.Platform.WinRT;
+using SQLiteNetExtensionsAsync.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -69,48 +70,101 @@ namespace WhereDidTheMoneyGo.Pages
         private async void InitAsync()
         {
             var connection = this.GetDbConnectionAsync();
-            await connection.CreateTableAsync<Expense>();
+            await connection.CreateTableAsync<SubCategory>();
             await connection.CreateTableAsync<Category>();
+            await connection.CreateTableAsync<Expense>();
 
             var numberOfCategories = (await this.GetAllCategoriesAsync()).Count;
 
             if (numberOfCategories == 0)
             {
+                // Insert all categories
+                var categoryFood = new Category() { Name = "Food" };
+                var categoryHousing = new Category() { Name = "Housing" };
+                var categoryPersonal = new Category() { Name = "Personal" };
+                var categoryTransportation = new Category() { Name = "Transportation" };
+
                 var categories = new List<Category>()
-                                            { new Category() { CategoryName = "Food", SubCategoryName="Groceries" },
-                                            new Category() { CategoryName = "Food", SubCategoryName="Restaurants" },
-                                            new Category() { CategoryName = "Food", SubCategoryName="Lunch/Snacks" },
-                                            new Category() { CategoryName = "Housing", SubCategoryName="Mortgage/Rent" },
-                                            new Category() { CategoryName = "Housing", SubCategoryName="Electricity" },
-                                            new Category() { CategoryName = "Housing", SubCategoryName="Garage" },
-                                            new Category() { CategoryName = "Housing", SubCategoryName="Water" },
-                                            new Category() { CategoryName = "Housing", SubCategoryName="TV / Internet" },
-                                            new Category() { CategoryName = "Housing", SubCategoryName="Heating" },
-                                            new Category() { CategoryName = "Housing", SubCategoryName="Maintenance & Repairs" },
-                                            new Category() { CategoryName = "Housing", SubCategoryName="House service fee" },
-                                            new Category() { CategoryName = "Personal", SubCategoryName="Health" },
-                                            new Category() { CategoryName = "Personal", SubCategoryName="Beauty" },
-                                            new Category() { CategoryName = "Personal", SubCategoryName="Clothes" },
-                                            new Category() { CategoryName = "Personal", SubCategoryName="Gadgets" },
-                                            new Category() { CategoryName = "Personal", SubCategoryName="Entertainment" },
-                                            new Category() { CategoryName = "Personal", SubCategoryName="Credit card Payment" },
-                                            new Category() { CategoryName = "Personal", SubCategoryName="Gifts" },
-                                            new Category() { CategoryName = "Personal", SubCategoryName="Vacation" },
-                                            new Category() { CategoryName = "Personal", SubCategoryName="Education" },
-                                            new Category() { CategoryName = "Personal", SubCategoryName="Miscellaneous" },
-                                            new Category() { CategoryName = "Personal", SubCategoryName="Car Payment" },
-                                            new Category() { CategoryName = "Transportation", SubCategoryName="Petrol" },
-                                            new Category() { CategoryName = "Transportation", SubCategoryName="Car Insurance" },
-                                            new Category() { CategoryName = "Transportation", SubCategoryName="Repairs & Maintenance" },
-                                            };
+                                {
+                                    categoryFood,
+                                    categoryHousing,
+                                    categoryPersonal,
+                                    categoryTransportation
+                                };
                 await connection.InsertAllAsync(categories);
+
+                // Insert Food sub-categories
+                var subCategoriesFood = new List<SubCategory>()
+                                {
+                                    new SubCategory() { Name = "Groceries" },
+                                    new SubCategory() { Name = "Restaurants" },
+                                    new SubCategory() { Name = "Lunch/Snacks" },
+                                };
+                await connection.InsertAllAsync(subCategoriesFood);
+                categoryFood.SubCategories = new List<SubCategory>();
+                foreach (var item in subCategoriesFood)
+                {
+                    categoryFood.SubCategories.Add(item);
+                }
+                await connection.UpdateWithChildrenAsync(categoryFood);
+
+                // Insert Housing sub-categories
+                var subCategoriesHousing = new List<SubCategory>()
+                                {
+                                    new SubCategory() { Name = "Mortgage/Rent" },
+                                    new SubCategory() { Name = "Electricity" },
+                                    new SubCategory() { Name = "Garage" },
+                                    new SubCategory() { Name = "Water" },
+                                    new SubCategory() { Name = "TV / Internet" },
+                                    new SubCategory() { Name = "Heating" },
+                                    new SubCategory() { Name = "Maintenance & Repairs" }
+                                };
+                await connection.InsertAllAsync(subCategoriesHousing);
+                categoryHousing.SubCategories = new List<SubCategory>();
+                foreach (var item in subCategoriesHousing)
+                {
+                    categoryHousing.SubCategories.Add(item);
+                }
+                await connection.UpdateWithChildrenAsync(categoryHousing);
+
+                // Insert Personal sub-categories
+                var subCategoriesPersonal = new List<SubCategory>()
+                                {
+                                    new SubCategory() { Name = "Health" },
+                                    new SubCategory() { Name = "Beauty" },
+                                    new SubCategory() { Name = "Clothes" },
+                                    new SubCategory() { Name = "Gadgets" },
+                                    new SubCategory() { Name = "Entertainment" },
+                                    new SubCategory() { Name = "Credit card Payment" },
+                                    new SubCategory() { Name = "Gifts" },
+                                    new SubCategory() { Name = "Vacation" },
+                                    new SubCategory() { Name = "Education" },
+                                    new SubCategory() { Name = "Miscellaneous" },
+                                    new SubCategory() { Name = "Car Payment" }
+                                };
+                await connection.InsertAllAsync(subCategoriesPersonal);
+                categoryPersonal.SubCategories = new List<SubCategory>();
+                foreach (var item in subCategoriesPersonal)
+                {
+                    categoryPersonal.SubCategories.Add(item);
+                }
+                await connection.UpdateWithChildrenAsync(categoryPersonal);
+
+                // Insert Transportation sub-categories
+                var subCategoriesTransportation = new List<SubCategory>()
+                                {
+                                    new SubCategory() { Name = "Petrol" },
+                                    new SubCategory() { Name = "Car Insurance" },
+                                    new SubCategory() { Name = "Repairs & Maintenance" }
+                                };
+                await connection.InsertAllAsync(subCategoriesTransportation);
+                categoryTransportation.SubCategories = new List<SubCategory>();
+                foreach (var item in subCategoriesTransportation)
+                {
+                    categoryTransportation.SubCategories.Add(item);
+                }
+                await connection.UpdateWithChildrenAsync(categoryTransportation);
             }
-
-            //string createTableExpenses = "CREATE TABLE Expense2(Id integer primary key autoincrement not null ,Date datetime ,CategoryId integer ,SubCategory varchar ,Amount float ,Note varchar ,ImgUrl varchar, FOREIGN KEY(CategoryId) REFERENCES Category(Id))";
-            //string createTableCategory = "CREATE TABLE Category(Id integer primary key autoincrement not null ,Category varchar)";
-
-            //await connection.ExecuteAsync(createTableCategory);
-            //await connection.ExecuteAsync(createTableExpenses);
         }
 
         private async Task<int> InsertExpenceAsync(Expense item)
@@ -122,17 +176,21 @@ namespace WhereDidTheMoneyGo.Pages
 
         private async void OnSaveButtonClick(object sender, RoutedEventArgs e)
         {
+            var connection = this.GetDbConnectionAsync();
+
             var amount = 0.0;
             double.TryParse(this.tbAmount.Text, out amount);
             var date = this.dpDate.Date.UtcDateTime;
+            var category = await this.GetCategoriesAsync(this.tbCategory.Text);
+            var subCategory = await this.GetSubCategoriesAsync(this.tbSubCategory.Text);
 
             var item = new Expense
             {
+                CategoryId = category.Id,
+                SubCategoryId = subCategory.Id,
                 Date = date,
-                Category = this.tbCategory.Text,
-                SubCategory = this.tbSubCategory.Text,
                 Amount = amount,
-                Note = this.tbNotes.Text,
+                Description = this.tbDescription.Text,
                 ImgUrl = this.tbImageUrl.Text
             };
 
@@ -156,10 +214,28 @@ namespace WhereDidTheMoneyGo.Pages
             return result;
         }
 
+        private async Task<Category> GetCategoriesAsync(string categoryName)
+        {
+            var connection = this.GetDbConnectionAsync();
+            var result = await connection.Table<Category>()
+                                        .Where(x => x.Name == categoryName)
+                                        .FirstOrDefaultAsync();
+            return result;
+        }
+
+        private async Task<SubCategory> GetSubCategoriesAsync(string subCategoryName)
+        {
+            var connection = this.GetDbConnectionAsync();
+            var result = await connection.Table<SubCategory>()
+                                        .Where(x => x.Name == subCategoryName)
+                                        .FirstOrDefaultAsync();
+            return result;
+        }
+
         private async Task<List<Expense>> GetAllExpensesAsync()
         {
             var connection = this.GetDbConnectionAsync();
-            var result = await connection.Table<Expense>().ToListAsync();
+            var result = await connection.GetAllWithChildrenAsync<Expense>();
             return result;
         }
     }

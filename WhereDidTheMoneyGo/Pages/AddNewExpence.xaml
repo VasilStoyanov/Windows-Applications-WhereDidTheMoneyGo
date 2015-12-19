@@ -52,8 +52,8 @@
                 <TextBlock Text="Amount" Grid.Row="3" Grid.Column="0"/>
                 <TextBox Name="tbAmount" PlaceholderText="Add Amount" Grid.Row="3" Grid.Column="1"/>
 
-                <TextBlock Text="Notes" Grid.Row="4" Grid.Column="0"/>
-                <TextBox Name="tbNotes" PlaceholderText="Add Notes" Grid.Row="4" Grid.Column="1"/>
+                <TextBlock Text="Description" Grid.Row="4" Grid.Column="0"/>
+                <TextBox Name="tbDescription" PlaceholderText="Add Notes" Grid.Row="4" Grid.Column="1"/>
 
                 <TextBlock Text="Image" Grid.Row="5" Grid.Column="0"/>
                 <TextBox Name="tbImageUrl" PlaceholderText="Add Image" Grid.Row="5" Grid.Column="1"/>

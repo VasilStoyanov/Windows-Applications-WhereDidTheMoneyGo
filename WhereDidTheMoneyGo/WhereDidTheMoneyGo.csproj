@@ -104,6 +104,7 @@
     <Compile Include="Common\NotificationMessages.cs" />
     <Compile Include="Data\Category.cs" />
     <Compile Include="Data\Expense.cs" />
+    <Compile Include="Data\SubCategory.cs" />
     <Compile Include="Pages\AddNewExpence.xaml.cs">
       <DependentUpon>AddNewExpence.xaml</DependentUpon>
     </Compile>

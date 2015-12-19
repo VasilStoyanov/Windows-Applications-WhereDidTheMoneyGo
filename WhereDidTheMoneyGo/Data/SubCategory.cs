@@ -4,7 +4,7 @@
     using SQLite.Net.Attributes;
     using SQLiteNetExtensions.Attributes;
 
-    public class Category
+    public class SubCategory
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
@@ -13,9 +13,12 @@
         public string Name { get; set; }
 
         [OneToMany(CascadeOperations = CascadeOperation.All)]
-        public List<SubCategory> SubCategories { get; set; }
-
-        [OneToMany(CascadeOperations = CascadeOperation.All)]
         public List<Expense> Expenses { get; set; }
+
+        [ForeignKey(typeof(Category))]
+        public int CategoryId { get; set; }
+
+        [ManyToOne]
+        public Category Category { get; set; }
     }
 }
