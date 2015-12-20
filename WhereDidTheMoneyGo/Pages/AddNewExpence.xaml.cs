@@ -18,6 +18,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI;
+using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -224,24 +225,12 @@ namespace WhereDidTheMoneyGo.Pages
             return result;
         }
 
-        private async Task<int> SaveExpenceAsync(Expense item)
+        private async Task<int> InsertExpenceAsync(Expense item)
         {
             var connection = this.GetDbConnectionAsync();
             var result = await connection.InsertAsync(item);
             return result;
         }
-
-        //private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
-        //{
-        //    if (this.newCategory.Visibility == Visibility.Collapsed)
-        //    {
-        //        this.newCategory.Visibility = Visibility.Visible;
-        //    }
-        //    else
-        //    {
-        //        this.newCategory.Visibility = Visibility.Collapsed;
-        //    }
-        //}
 
         private async void OnSaveButtonClick(object sender, RoutedEventArgs e)
         {
@@ -258,6 +247,11 @@ namespace WhereDidTheMoneyGo.Pages
             var category = await this.GetCategoriesAsync(this.tbCategory.SelectedValue.ToString());
             var subCategory = await this.GetSubCategoriesAsync(this.tbSubCategory.SelectedValue.ToString());
 
+            if(category == null || subCategory == null)
+            {
+                return;
+            }
+
             var item = new Expense
             {
                 CategoryId = category.Id,
@@ -268,7 +262,9 @@ namespace WhereDidTheMoneyGo.Pages
                 ImgUrl = this.tbImageUrl.Text
             };
 
-            await this.SaveExpenceAsync(item);
+            await this.InsertExpenceAsync(item);
+            var message = "Category " + category.Name + " updated! :)";
+            await GetNotification(message);
             this.Frame.Navigate(typeof(MainPage));
         }
 
@@ -375,56 +371,19 @@ namespace WhereDidTheMoneyGo.Pages
             }
         }
 
-        //private void NotifyUserMessage(bool isValid, string name)
-        //{
-        //    if (isValid)
-        //    {
-        //        var oldValue = AnimationsProperties.GetShowHideValue(this.notificationText);
-        //        AnimationsProperties.SetShowHideValue(this.notificationText, !oldValue);
+        public async static Task GetNotification(string text)
+        {
+            var peshoXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText03);
+            var peshoElements = peshoXml.GetElementsByTagName("text");
+            peshoElements[0].AppendChild(peshoXml.CreateTextNode(text));
 
-        //        var timer = new DispatcherTimer();
-        //        var stopWatch = new Stopwatch();
-        //        timer.Interval = TimeSpan.FromMilliseconds(15);
-        //        timer.Start();
-        //        stopWatch.Start();
-        //        timer.Tick += (sender, args) =>
-        //        {
-        //            if (stopWatch.ElapsedMilliseconds >= 3000)
-        //            {
-        //                timer.Stop();
-        //                stopWatch.Stop();
-        //                this.notificationText.Visibility = Visibility.Collapsed;
-        //                return;
-        //            }
-        //        };
+            var toastNotification = new ToastNotification(peshoXml);
+            ToastNotificationManager.CreateToastNotifier().Show(toastNotification);
+        }
 
-        //        this.notificationText.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
-        //        this.notificationText.Text = string.Format("Successfuly added category {0}", name);
-        //    }
-        //    else
-        //    {
-        //        var oldValue = AnimationsProperties.GetShowHideValue(this.notificationText);
-        //        AnimationsProperties.SetShowHideValue(this.notificationText, !oldValue);
-
-        //        var timer = new DispatcherTimer();
-        //        var stopWatch = new Stopwatch();
-        //        timer.Interval = TimeSpan.FromMilliseconds(15);
-        //        timer.Start();
-        //        stopWatch.Start();
-        //        timer.Tick += (sender, args) =>
-        //        {
-        //            if (stopWatch.ElapsedMilliseconds >= 3000)
-        //            {
-        //                timer.Stop();
-        //                stopWatch.Stop();
-        //                this.notificationText.Visibility = Visibility.Collapsed;
-        //                return;
-        //            }
-        //        };
-
-        //        this.notificationText.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-        //        this.notificationText.Text = this.reasonForFailMessage;
-        //    }
-        //}
+        private void OnBackToMainPageClick(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(MainPage));
+        }
     }
 }
