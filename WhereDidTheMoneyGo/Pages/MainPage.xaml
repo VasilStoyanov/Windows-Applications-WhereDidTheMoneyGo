@@ -8,7 +8,7 @@
     xmlns:viewModels="using:WhereDidTheMoneyGo.ViewModels"
     xmlns:common="using:WhereDidTheMoneyGo.Common"
     xmlns:attachedProperties="using:WhereDidTheMoneyGo.AttachedProperties"
-    mc:Ignorable="d">
+    mc:Ignorable="d"    >
 
     <Page.Resources>
         <DataTemplate x:Key="categoriesDataTemplate">
@@ -113,6 +113,7 @@
                      ItemTemplate="{StaticResource categoriesDataTemplate}"
                      SelectedValuePath="Name"
                      SelectionChanged="onlbMain_SelectionChanged"
+                     ManipulationMode="All"
                      ManipulationStarted="lbMain_ManipulationStarted"
                      ManipulationDelta="lbMain_ManipulationDelta">
                 <ListBox.ItemContainerStyle>

@@ -40,7 +40,7 @@
                        HorizontalAlignment="Center" 
                            VerticalAlignment="Center" 
                            FontSize="25" 
-                           FontWeight="Bold" 
+                           FontFamily="Segoe Print"
                            Text="Add expence"/>
         </Border>
         <StackPanel Grid.Row="1" Margin="0,0,0,147" Grid.RowSpan="3">
@@ -96,56 +96,62 @@
                           Grid.Row="2" Grid.Column="1"/>
 
                 <TextBlock Text="Amount"
-                           Grid.Row="3"
+                           Grid.Row="4"
                            Grid.Column="0"
                            Style="{StaticResource Label}"/>
                 <TextBox Name="tbAmount" 
                          PlaceholderText="Add Amount" 
-                         Grid.Row="3"
+                         Grid.Row="4"
                          Grid.Column="1"
                          KeyUp="AmountNotifier"/>
-                
+
                 <TextBlock Text="Description"
-                           Grid.Row="4" Grid.Column="0"
+                           Grid.Row="3" Grid.Column="0"
                            FontWeight="Bold"
                            Style="{StaticResource Label}"/>
-                
+
                 <TextBox Name="tbDescription" 
-                         PlaceholderText="Add Notes" 
+                         PlaceholderText="Add expense description" 
                          KeyUp="DescriptionNotifier"
-                         Grid.Row="4" Grid.Column="1"/>
-                
+                         Grid.Row="3" Grid.Column="1"/>
+
                 <TextBlock Text="Image"
+                           Visibility="Collapsed"
                            Grid.Row="5" Grid.Column="0"
                            Style="{StaticResource Label}"/>
-                
+
                 <TextBox Name="tbImageUrl"
+                         Visibility="Collapsed"
                          PlaceholderText="Add Image"
                          Grid.Row="5" Grid.Column="1"/>
-
-                <Button Name="saveButton"
+                <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4.5*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="4.5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="saveButton"
                         Visibility="Collapsed"
                         Content="Save"
                         Click="OnSaveButtonClick"
                         HorizontalAlignment="Stretch"
-                        Grid.Row="6" Grid.Column="0"
+                        Grid.Row="0" Grid.Column="2"
                         Background="#66ffcc"
                         BorderBrush="#00ffaa"
                         BorderThickness="5"
-                        Margin="0,50,0,0"
-                        Grid.ColumnSpan="2"/>
-                
-                <Button Name="backButton"
+                        Margin="0,50,0,0"/>
+
+                    <Button Name="backButton"
                         Visibility="Collapsed"
-                        Content="Back"
+                        Content="Cancel"
                         Click="OnBackToMainPageClick"
                         HorizontalAlignment="Stretch"
-                        Grid.Row="7" Grid.Column="0"
+                        Grid.Row="0" Grid.Column="0"
                         Background="#3399ff"
                         BorderBrush="#0073e6"
                         BorderThickness="5"
-                        Margin="0,10,0,0"
-                        Grid.ColumnSpan="2"/>
+                        Margin="0,50,0,0"/>
+                </Grid>
             </Grid>
         </StackPanel>
         <StackPanel Grid.Row="3" Margin="0,0.333,0,0">

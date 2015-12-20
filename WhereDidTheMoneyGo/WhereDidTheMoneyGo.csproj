@@ -98,7 +98,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AttachedProperties\AnimationsProperties.cs" />
     <Compile Include="Common\BadWords.cs" />
     <Compile Include="Common\DefaultValues.cs" />
     <Compile Include="Common\NotificationMessages.cs" />

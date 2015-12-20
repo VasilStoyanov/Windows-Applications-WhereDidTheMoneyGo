@@ -11,6 +11,7 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Windows.Foundation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -21,11 +22,16 @@ namespace WhereDidTheMoneyGo.Pages
     /// </summary>
     public sealed partial class ListExpenses : Page
     {
+        private Point initialpoint;
+        private Boolean isSwiping;
+
         public ListExpenses()
         {
             this.InitializeComponent();
             this.ViewModel = new ListExpensesViewModel();
 
+            this.ManipulationStarted += Page_ManipulationStarted;
+            this.ManipulationDelta += Page_ManipulationDelta;
         }
 
         public ListExpensesViewModel ViewModel
@@ -96,6 +102,25 @@ namespace WhereDidTheMoneyGo.Pages
         {
             var item = sender as Grid;
             //var itemToDelete = item.DataContext.Id;
+        }
+
+        private void Page_ManipulationStarted(object sender, Windows.UI.Xaml.Input.ManipulationStartedRoutedEventArgs e)
+        {
+                initialpoint = e.Position;
+        }
+
+        private void Page_ManipulationDelta(object sender, Windows.UI.Xaml.Input.ManipulationDeltaRoutedEventArgs e)
+        {
+            if (e.IsInertial)
+            {
+                Point currentpoint = e.Position;
+                if (initialpoint.X - currentpoint.X >= 500)//500 is the threshold value, where you want to trigger the swipe right event
+                {
+                    e.Complete();
+                    
+                    this.Frame.Navigate(typeof(MainPage));
+                }
+            }
         }
     }
 }

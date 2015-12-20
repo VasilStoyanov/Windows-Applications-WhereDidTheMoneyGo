@@ -39,6 +39,7 @@ namespace WhereDidTheMoneyGo.Pages
     {
         private string reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
         private Point initialpoint;
+        private Boolean isSwiping;
 
         public MainPage()
         {
@@ -56,6 +57,9 @@ namespace WhereDidTheMoneyGo.Pages
             this.GetAllData(showMonth, showYear, selectedCategory);
 
             this.notificationBox.Visibility = Visibility.Collapsed;
+
+            this.ManipulationStarted += lbMain_ManipulationStarted;
+            this.ManipulationDelta += lbMain_ManipulationDelta;
         }
 
         public MainPageViewModel ViewModel
@@ -340,7 +344,7 @@ namespace WhereDidTheMoneyGo.Pages
 
         private void lbMain_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
-            initialpoint = e.Position;
+                initialpoint = e.Position;
         }
 
         private void lbMain_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
@@ -350,12 +354,13 @@ namespace WhereDidTheMoneyGo.Pages
                 Point currentpoint = e.Position;
                 if (currentpoint.X - initialpoint.X >= 500)//500 is the threshold value, where you want to trigger the swipe right event
                 {
+                    e.Complete();
+
                     var category = this.lbMain.SelectedValue.ToString();
                     var month = this.datePicker.Date.Month;
                     var year = this.datePicker.Date.Year;
                     var expenseParameter = new ListExpensesParametersViewModel() { SelectedCategory = category, SelectedMonth = month, SelectedYear = year };
                     this.Frame.Navigate(typeof(ListExpenses), expenseParameter);
-                    e.Complete();
                 }
             }
         }
