@@ -11,6 +11,7 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using WhereDidTheMoneyGo.Data;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,7 +26,6 @@ namespace WhereDidTheMoneyGo.Pages
         {
             this.InitializeComponent();
             this.ViewModel = new ListExpensesViewModel();
-
         }
 
         public ListExpensesViewModel ViewModel
