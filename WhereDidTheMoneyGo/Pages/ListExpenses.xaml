@@ -34,7 +34,7 @@
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Border  Background="Silver">
+        <Border  Background="CornflowerBlue">
             <TextBlock Name="tbPageTitle" 
                        Grid.Row="0" Grid.Column="0" 
                        HorizontalAlignment="Center" 
@@ -89,9 +89,9 @@
 
     <Page.BottomAppBar>
         <CommandBar ClosedDisplayMode="Compact">
-            <AppBarButton Icon="Add"
+            <AppBarButton Icon="Back"
                           Label="New category"
-                          Click="OnCreateNewCategoryClick"/>
+                          Click="OnBackToMainPage"/>
         </CommandBar>
     </Page.BottomAppBar>
 

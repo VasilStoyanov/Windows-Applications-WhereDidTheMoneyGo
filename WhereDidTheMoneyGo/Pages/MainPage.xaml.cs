@@ -290,31 +290,6 @@ namespace WhereDidTheMoneyGo.Pages
             }
         }
 
-        private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-            //    var newCategoryName = this.nameOfCategory.Text;
-            //    if (categoryNameIsValid)
-            //    {
-            //        var newCategory = new CategoryItemViewModel()
-            //        {
-            //            /*Category = CategoryViewModel.Food,*/ // TODO - fix it later
-            //            SubCategories = new ObservableCollection<SubCategoryItemViewModel>(),
-            //            Amount = DefaultValues.DefaultCategoryValue
-            //        };
-
-            //        this.categories.Add(newCategory);
-            //        this.categoryNames.Add(newCategoryName.ToLower());
-            //        NotifyUserMessage(true, newCategoryName);
-            //        this.nameOfCategory.Text = String.Empty;
-            //        this.categoryNameIsValid = false;
-            //    }
-            //    else
-            //    {
-            //        NotifyUserMessage(false, newCategoryName);
-            //    }
-        }
-
         private void onDatePickerDateChanged(object sender, DatePickerValueChangedEventArgs e)
         {
             this.ViewModel.Categories.Clear();
@@ -352,26 +327,11 @@ namespace WhereDidTheMoneyGo.Pages
         private void OnNewExpenceAddClick(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(AddNewExpence));
-            //    var newCategoryName = this.nameOfCategory.Text;
-            //    if (categoryNameIsValid)
-            //    {
-            //        var newCategory = new CategoryItemViewModel()
-            //        {
-            //            /*Category = CategoryViewModel.Food,*/ // TODO - fix it later
-            //            SubCategories = new ObservableCollection<SubCategoryItemViewModel>(),
-            //            Amount = DefaultValues.DefaultCategoryValue
-            //        };
+        }
 
-            //        this.categories.Add(newCategory);
-            //        this.categoryNames.Add(newCategoryName.ToLower());
-            //        NotifyUserMessage(true, newCategoryName);
-            //        this.nameOfCategory.Text = String.Empty;
-            //        this.categoryNameIsValid = false;
-            //    }
-            //    else
-            //    {
-            //        NotifyUserMessage(false, newCategoryName);
-            //    }
+        private void OnDoubleTap(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(ListExpenses));
         }
     }
 }

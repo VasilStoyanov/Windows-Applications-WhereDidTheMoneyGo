@@ -69,16 +69,9 @@ namespace WhereDidTheMoneyGo.Pages
             return asyncConnection;
         }
 
-        private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
+        private void OnBackToMainPage(object sender, RoutedEventArgs e)
         {
-            if (this.newCategory.Visibility == Visibility.Collapsed)
-            {
-                this.newCategory.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                this.newCategory.Visibility = Visibility.Collapsed;
-            }
+            this.Frame.Navigate(typeof(MainPage));
         }
     }
 }
