@@ -1,31 +1,33 @@
-﻿namespace WhereDidTheMoneyGo.ViewModels
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
+namespace WhereDidTheMoneyGo.ViewModels
+{
     public class CategoryViewModel
     {
-        private ICollection<CategoryItemViewModel> categories;
+        private ObservableCollection<SubCategoryViewModel> subCategoris;
 
         public CategoryViewModel()
         {
-            this.Categories = new ObservableCollection<CategoryItemViewModel>();
+            this.subCategoris = new ObservableCollection<SubCategoryViewModel>();
         }
 
-        public ICollection<CategoryItemViewModel> Categories
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public double Amount { get; set; }
+
+        public ObservableCollection<SubCategoryViewModel> SubCategories
         {
             get
             {
-                return this.categories;
+                return this.subCategoris;
             }
             set
             {
-                this.categories = value;
+                this.subCategoris = value;
             }
         }
-
-
     }
 }

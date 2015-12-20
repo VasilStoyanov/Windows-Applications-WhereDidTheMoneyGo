@@ -19,7 +19,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Row="0"
                                Grid.Column="0"
-                               Text="{Binding Category.Name}"
+                               Text="{Binding Name}"
                                Style="{StaticResource CategoriesTextBoxStyle}"/>
                     
                     <TextBlock Grid.Row="0"
@@ -27,7 +27,7 @@
                                Text="{Binding Amount}"                              
                                Style="{StaticResource AmountsTextBoxStyle}"/>
                 </Grid>
-                <ItemsControl ItemsSource="{Binding Items}">
+                <ItemsControl ItemsSource="{Binding SubCategories}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid >
@@ -35,7 +35,7 @@
                                     <ColumnDefinition Width="{Binding ElementName=mainGrid,Path=ColumnDefinitions[0].Width}"/>
                                     <ColumnDefinition Width="{Binding ElementName=mainGrid,Path=ColumnDefinitions[1].Width}"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Category}" Style="{StaticResource SubCategoriesTextBoxStyle}"/>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}" Style="{StaticResource SubCategoriesTextBoxStyle}"/>
                                 <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Amount}" Style="{StaticResource SubCategoryAmountsTextBoxStyle}"/>
                             </Grid>
                         </DataTemplate>

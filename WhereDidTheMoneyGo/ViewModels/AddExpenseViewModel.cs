@@ -7,17 +7,17 @@
 
     public class AddExpenseViewModel: BaseViewModel
     {
-        private ObservableCollection<CategoryViewModel2> categories;
+        private ObservableCollection<CategoryViewModel> categories;
         private string currentCategory;
         private ObservableCollection<SubCategoryViewModel> subCategories;
 
         public AddExpenseViewModel()
         {
-            this.categories = new ObservableCollection<CategoryViewModel2>();
+            this.categories = new ObservableCollection<CategoryViewModel>();
             this.subCategories = new ObservableCollection<SubCategoryViewModel>();
         }
 
-        public ObservableCollection<CategoryViewModel2> Categories
+        public ObservableCollection<CategoryViewModel> Categories
         {
             get
             {

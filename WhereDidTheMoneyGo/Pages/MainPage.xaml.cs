@@ -1,4 +1,8 @@
-﻿using System;
+﻿using SQLite.Net;
+using SQLite.Net.Async;
+using SQLite.Net.Platform.WinRT;
+using SQLiteNetExtensionsAsync.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -6,11 +10,14 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
+using System.Threading.Tasks;
 using WhereDidTheMoneyGo.AttachedProperties;
 using WhereDidTheMoneyGo.Common;
+using WhereDidTheMoneyGo.DataModels;
 using WhereDidTheMoneyGo.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,14 +38,15 @@ namespace WhereDidTheMoneyGo.Pages
     {
         private bool categoryNameIsValid = false;
         private string reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
-        // Temporary
-        private ObservableCollection<CategoryItemViewModel> categories = new ObservableCollection<CategoryItemViewModel>();
-        private ObservableCollection<SubCategoryItemViewModel> categoryItems = new ObservableCollection<SubCategoryItemViewModel>();
-        private HashSet<string> categoryNames = new HashSet<string>();
+        //// Temporary
+        //private ObservableCollection<CategoryItemViewModel> categories = new ObservableCollection<CategoryItemViewModel>();
+        //private ObservableCollection<SubCategoryItemViewModel> categoryItems = new ObservableCollection<SubCategoryItemViewModel>();
+        //private HashSet<string> categoryNames = new HashSet<string>();
 
         public MainPage()
         {
             this.InitializeComponent();
+
 
             // Sample data. Should be deleted when everything is ready
             //var item1 = new SubCategoryItemViewModel() { Category = "Petrol", Amount = 100 };
@@ -58,11 +66,42 @@ namespace WhereDidTheMoneyGo.Pages
             //this.categoryNames.Add("housing");
             //this.categories.Add(category2);
 
-            var contentViewModel = new CategoryViewModel();
+            this.ViewModel = new MainPageViewModel();
+            this.GetAllData();
+
+            //this.GetData();
+
             //contentViewModel.Categories = categories;
 
-            this.DataContext = contentViewModel;
             this.notificationBox.Visibility = Visibility.Collapsed;
+        }
+
+        public MainPageViewModel ViewModel
+        {
+            get
+            {
+                return this.DataContext as MainPageViewModel;
+            }
+            set
+            {
+                this.DataContext = value;
+            }
+        }
+
+        public SQLiteAsyncConnection GetDbConnectionAsync()
+        {
+            var dbFilePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "db.sqlite");
+
+            var connectionFactory =
+                new Func<SQLiteConnectionWithLock>(
+                    () =>
+                    new SQLiteConnectionWithLock(
+                        new SQLitePlatformWinRT(),
+                        new SQLiteConnectionString(dbFilePath, storeDateTimeAsTicks: false)));
+
+            var asyncConnection = new SQLiteAsyncConnection(connectionFactory);
+
+            return asyncConnection;
         }
 
         private void OnShowNewCategoryMenuClick(object sender, RoutedEventArgs e)
@@ -82,60 +121,62 @@ namespace WhereDidTheMoneyGo.Pages
 
         private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
         {
-            var newCategoryName = this.nameOfCategory.Text;
-            if (categoryNameIsValid)
-            {
-                var newCategory = new CategoryItemViewModel()
-                {
-                    /*Category = CategoryViewModel.Food,*/ // TODO - fix it later
-                    SubCategories = new ObservableCollection<SubCategoryItemViewModel>(),
-                    Amount = DefaultValues.DefaultCategoryValue
-                };
+            throw new NotImplementedException();
+            //    var newCategoryName = this.nameOfCategory.Text;
+            //    if (categoryNameIsValid)
+            //    {
+            //        var newCategory = new CategoryItemViewModel()
+            //        {
+            //            /*Category = CategoryViewModel.Food,*/ // TODO - fix it later
+            //            SubCategories = new ObservableCollection<SubCategoryItemViewModel>(),
+            //            Amount = DefaultValues.DefaultCategoryValue
+            //        };
 
-                this.categories.Add(newCategory);
-                this.categoryNames.Add(newCategoryName.ToLower());
-                NotifyUserMessage(true, newCategoryName);
-                this.nameOfCategory.Text = String.Empty;
-                this.categoryNameIsValid = false;
-            }
-            else
-            {
-                NotifyUserMessage(false, newCategoryName);
-            }
+            //        this.categories.Add(newCategory);
+            //        this.categoryNames.Add(newCategoryName.ToLower());
+            //        NotifyUserMessage(true, newCategoryName);
+            //        this.nameOfCategory.Text = String.Empty;
+            //        this.categoryNameIsValid = false;
+            //    }
+            //    else
+            //    {
+            //        NotifyUserMessage(false, newCategoryName);
+            //    }
         }
 
         private void ValidateText(object sender, KeyRoutedEventArgs e)
         {
-            var correct = true;
-            if (this.nameOfCategory.Text.ToLower().Contains(BadWords.Naughty))
-            {
-                SetBorder(!correct);
-                this.reasonForFailMessage = NotificationMessages.NotifyMessageForBadName;
-            }
-            else if (this.nameOfCategory.Text.ToLower().Contains(BadWords.FWord))
-            {
-                SetBorder(!correct);
-                this.reasonForFailMessage = NotificationMessages.NotifyMessageForBadName;
-            }
-            else if (this.nameOfCategory.Text.Length >= DefaultValues.MaximumLengthOfCategoryName)
-            {
-                SetBorder(!correct);
-                this.reasonForFailMessage = NotificationMessages.NotifyMessageTooLongName;
-            }
-            else if (this.nameOfCategory.Text.Length <= DefaultValues.MinimumLengthOfCategoryName)
-            {
-                SetBorder(!correct);
-                this.reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
-            }
-            else if(this.categoryNames.Contains(this.nameOfCategory.Text.ToLower()))
-            {
-                SetBorder(!correct);
-                this.reasonForFailMessage = NotificationMessages.NotifyMessageNameAlreadyExist;
-            }
-            else
-            {
-                SetBorder(correct);
-            }
+            throw new NotImplementedException();
+            //    var correct = true;
+            //    if (this.nameOfCategory.Text.ToLower().Contains(BadWords.Naughty))
+            //    {
+            //        SetBorder(!correct);
+            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageForBadName;
+            //    }
+            //    else if (this.nameOfCategory.Text.ToLower().Contains(BadWords.FWord))
+            //    {
+            //        SetBorder(!correct);
+            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageForBadName;
+            //    }
+            //    else if (this.nameOfCategory.Text.Length >= DefaultValues.MaximumLengthOfCategoryName)
+            //    {
+            //        SetBorder(!correct);
+            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageTooLongName;
+            //    }
+            //    else if (this.nameOfCategory.Text.Length <= DefaultValues.MinimumLengthOfCategoryName)
+            //    {
+            //        SetBorder(!correct);
+            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
+            //    }
+            //    else if(this.categoryNames.Contains(this.nameOfCategory.Text.ToLower()))
+            //    {
+            //        SetBorder(!correct);
+            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageNameAlreadyExist;
+            //    }
+            //    else
+            //    {
+            //        SetBorder(correct);
+            //    }
         }
 
         private void SetBorder(bool correct)
@@ -199,9 +240,85 @@ namespace WhereDidTheMoneyGo.Pages
                     }
                 };
 
-                this.notificationBox.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));               
+                this.notificationBox.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
                 this.notificationBox.Text = this.reasonForFailMessage;
             }
+        }
+
+        public async void GetAllCategoriesAsync()
+        {
+            var connection = this.GetDbConnectionAsync();
+            var categories = await connection.Table<Category>().ToListAsync();
+            foreach (var category in categories)
+            {
+                this.ViewModel.Categories.Add(new CategoryViewModel() { Name = category.Name });
+            }
+        }
+
+        public async void GetAllSubCategoriesAsync()
+        {
+            var connection = this.GetDbConnectionAsync();
+            var subCategories = await connection.GetAllWithChildrenAsync<SubCategory>();
+        }
+
+        public async void GetAllData2()
+        {
+            var connection = this.GetDbConnectionAsync();
+            var expenses = await connection.GetAllWithChildrenAsync<Expense>();
+            foreach (var expense in expenses)
+            {
+            }
+
+        }
+
+        public async void GetAllData()
+        {
+            var connection = this.GetDbConnectionAsync();
+
+            var categories = await connection.GetAllWithChildrenAsync<Category>();
+
+
+            var expenses = await connection.GetAllWithChildrenAsync<Expense>();
+
+
+            foreach (var category in categories)
+            {
+                var categorySum = 0.0;
+                foreach (var expense in category.Expenses)
+                {
+                    categorySum += expense.Amount;
+                }
+
+
+                var newCategoryViewModel = new CategoryViewModel() { Name = category.Name, Amount = categorySum };
+
+                var newSubCategoryViewModel = new SubCategoryViewModel();
+                category.SubCategories.ForEach(
+                    s => newCategoryViewModel.SubCategories.Add(
+                                                            new SubCategoryViewModel
+                                                            {
+                                                                Name = s.Name,
+                                                                Amount = GetExpenses(s.Expenses)
+                                                            })
+                );
+
+                this.ViewModel.Categories.Add(newCategoryViewModel);
+            }
+        }
+
+        public static double GetExpenses(List<Expense> expenses)
+        {
+            var amount = 0.0;
+            if (expenses == null)
+            {
+                return amount;
+            }
+
+            foreach (var expense in expenses)
+            {
+                amount += expense.Amount;
+            }
+            return amount;
         }
     }
 }

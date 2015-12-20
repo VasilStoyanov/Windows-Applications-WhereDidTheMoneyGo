@@ -168,12 +168,7 @@ namespace WhereDidTheMoneyGo.Pages
             }
 
 
-            var allCategories = await this.GetAllCategoriesAsync();
-            foreach(var category in allCategories)
-            {
-                var newCategoryViewModel = new CategoryViewModel2 { CategoryName = category.Name };
-                this.ViewModel.Categories.Add(newCategoryViewModel);
-            }
+
         }
 
         public async Task<List<Category>> GetAllCategoriesAsync()
@@ -266,7 +261,7 @@ namespace WhereDidTheMoneyGo.Pages
             var allSubCategories = await this.GetSubCategoriesByIdAsync(category.Id);
             foreach (var item in allSubCategories)
             {
-                var newSubCategoryViewModel = new SubCategoryViewModel { SubCategoryName = item.Name };
+                var newSubCategoryViewModel = new SubCategoryViewModel { Name = item.Name };
                 this.ViewModel.SubCategories.Add(newSubCategoryViewModel);
             }
         }

@@ -2,8 +2,8 @@
 {
     public class SubCategoryViewModel
     {
-        public string SubCategoryName { get; set; }
+        public string Name { get; set; }
 
-        public double SubCategoryAmount { get; set; }
+        public double Amount { get; set; }
     }
 }
