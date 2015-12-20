@@ -1,0 +1,98 @@
+﻿<Page
+    x:Class="WhereDidTheMoneyGo.Pages.ListExpenses"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WhereDidTheMoneyGo.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="categoriesDataTemplate">
+            <StackPanel>
+                <Grid Background="LightBlue">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Text="{Binding Description}"
+                               Style="{StaticResource CategoriesTextBoxStyle}"/>
+
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="1"
+                               Text="{Binding Amount}"                              
+                               Style="{StaticResource AmountsTextBoxStyle}"/>
+                </Grid>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Border  Background="Silver">
+            <TextBlock Name="tbPageTitle" 
+                       Grid.Row="0" Grid.Column="0" 
+                       HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           FontSize="25" 
+                           FontWeight="Bold" 
+                           Text="All expenses"/>
+        </Border>
+
+        <ListBox Grid.Row="1" 
+                     Grid.Column="0" 
+                     Grid.ColumnSpan="3" 
+                     ItemsSource="{Binding Expenses}"
+                     ItemTemplate="{StaticResource categoriesDataTemplate}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+
+        <!--Add new Category-->
+        <Grid Grid.Row="2" 
+            Name="newCategory"
+              VerticalAlignment="Center" 
+              Background="Aquamarine"
+              Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20*"/>
+                <ColumnDefinition Width="80*"/>
+                <ColumnDefinition Width="20*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Name:"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Stretch"
+                       Grid.Row="0"
+                       Grid.Column="0"/>
+            <TextBox HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center"
+                     Grid.Row="0"
+                     Grid.Column="1"/>
+            <Button Content="Add"
+                    HorizontalAlignment="Stretch"
+                    Grid.Row="0" 
+                    Grid.Column="2"/>
+        </Grid>
+    </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar ClosedDisplayMode="Compact">
+            <AppBarButton Icon="Add"
+                          Label="New category"
+                          Click="OnCreateNewCategoryClick"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+</Page>

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -46,32 +47,9 @@ namespace WhereDidTheMoneyGo.Pages
         public MainPage()
         {
             this.InitializeComponent();
-
-
-            // Sample data. Should be deleted when everything is ready
-            //var item1 = new SubCategoryItemViewModel() { Category = "Petrol", Amount = 100 };
-            //var item2 = new SubCategoryItemViewModel() { Category = "Heating", Amount = 300 };
-            //var item3 = new SubCategoryItemViewModel() { Category = "Clothes", Amount = 50 };
-
-
-            //categoryItems.Add(item1);
-            //categoryItems.Add(item2);
-            //categoryItems.Add(item3);
-
-            //var category1 = new CategoryItemViewModel() { Category = CategoryViewModel.Food, SubCategories = categoryItems, Amount = 1000 };
-            //this.categoryNames.Add("food");
-            //this.categories.Add(category1);
-
-            //var category2 = new CategoryItemViewModel() { Category = CategoryViewModel.Housing, SubCategories = categoryItems, Amount = 938 };
-            //this.categoryNames.Add("housing");
-            //this.categories.Add(category2);
-
+            
             this.ViewModel = new MainPageViewModel();
             this.GetAllData();
-
-            //this.GetData();
-
-            //contentViewModel.Categories = categories;
 
             this.notificationBox.Visibility = Visibility.Collapsed;
         }
@@ -290,5 +268,6 @@ namespace WhereDidTheMoneyGo.Pages
             }
             return amount;
         }
+
     }
 }

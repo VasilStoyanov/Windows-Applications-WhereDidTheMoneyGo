@@ -109,6 +109,9 @@
     <Compile Include="Pages\AddNewExpence.xaml.cs">
       <DependentUpon>AddNewExpence.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ListExpenses.xaml.cs">
+      <DependentUpon>ListExpenses.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -117,6 +120,7 @@
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\CategoryViewModel.cs" />
     <Compile Include="ViewModels\ExpenceViewModel.cs" />
+    <Compile Include="ViewModels\ListExpensesViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\SubCategoryViewModel.cs" />
   </ItemGroup>
@@ -142,6 +146,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Pages\AddNewExpence.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ListExpenses.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

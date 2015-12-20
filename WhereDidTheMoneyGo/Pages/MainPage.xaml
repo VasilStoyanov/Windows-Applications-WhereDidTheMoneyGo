@@ -6,9 +6,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:WhereDidTheMoneyGo.ViewModels"
+    xmlns:common="using:WhereDidTheMoneyGo.Common"
     xmlns:attachedProperties="using:WhereDidTheMoneyGo.AttachedProperties"
     mc:Ignorable="d">
-    
+
     <Page.Resources>
         <DataTemplate x:Key="categoriesDataTemplate">
             <StackPanel>
@@ -21,16 +22,16 @@
                                Grid.Column="0"
                                Text="{Binding Name}"
                                Style="{StaticResource CategoriesTextBoxStyle}"/>
-                    
+
                     <TextBlock Grid.Row="0"
                                Grid.Column="1"
                                Text="{Binding Amount}"                              
                                Style="{StaticResource AmountsTextBoxStyle}"/>
                 </Grid>
-                <ItemsControl ItemsSource="{Binding SubCategories}">
+                <ItemsControl ItemsSource="{Binding SubCategories}" >
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid >
+                            <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="{Binding ElementName=mainGrid,Path=ColumnDefinitions[0].Width}"/>
                                     <ColumnDefinition Width="{Binding ElementName=mainGrid,Path=ColumnDefinitions[1].Width}"/>
@@ -96,7 +97,8 @@
                         VerticalAlignment="Stretch"
                         Grid.ColumnSpan="3"
                         Grid.Row="1"/>
-            <ListBox Grid.Row="3" 
+            <ListBox Name="lbMain"
+                     Grid.Row="3" 
                      Grid.Column="0" 
                      Grid.ColumnSpan="3" 
                      ItemsSource="{Binding Categories}"
@@ -107,7 +109,7 @@
                     </Style>
                 </ListBox.ItemContainerStyle>
             </ListBox>
-           
+
         </Grid>
 
         <!--Add new Category-->
@@ -149,3 +151,4 @@
         </CommandBar>
     </Page.BottomAppBar>
 </Page>
+
