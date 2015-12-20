@@ -37,7 +37,6 @@ namespace WhereDidTheMoneyGo.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private bool categoryNameIsValid = false;
         private string reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
         private Point initialpoint;
 

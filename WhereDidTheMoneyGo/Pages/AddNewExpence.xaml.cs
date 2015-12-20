@@ -48,6 +48,12 @@ namespace WhereDidTheMoneyGo.Pages
             this.InitAsync();
             this.ViewModel = new AddExpenseViewModel();
             this.PopulateCategoriesAsync();
+
+            var oldSaveButtonValue = AnimationsProperties.GetShowHideValue(this.saveButton);
+            AnimationsProperties.SetShowHideValue(this.saveButton, !oldSaveButtonValue);
+
+            var oldBackButtonValue = AnimationsProperties.GetShowHideValue(this.backButton);
+            AnimationsProperties.SetShowHideValue(this.backButton, !oldBackButtonValue);
         }
 
         public AddExpenseViewModel ViewModel

@@ -116,7 +116,9 @@
                          PlaceholderText="Add Image"
                          Grid.Row="5" Grid.Column="1"/>
 
-                <Button Content="Save"
+                <Button Name="saveButton"
+                        Visibility="Collapsed"
+                        Content="Save"
                         Click="OnSaveButtonClick"
                         HorizontalAlignment="Stretch"
                         Grid.Row="6" Grid.Column="0"
@@ -126,7 +128,9 @@
                         Margin="0,50,0,0"
                         Grid.ColumnSpan="2"/>
                 
-                <Button Content="Back"
+                <Button Name="backButton"
+                        Visibility="Collapsed"
+                        Content="Back"
                         Click="OnBackToMainPageClick"
                         HorizontalAlignment="Stretch"
                         Grid.Row="7" Grid.Column="0"
