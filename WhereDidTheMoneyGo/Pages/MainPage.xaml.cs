@@ -245,41 +245,11 @@ namespace WhereDidTheMoneyGo.Pages
             }
         }
 
-        public async void GetAllCategoriesAsync()
-        {
-            var connection = this.GetDbConnectionAsync();
-            var categories = await connection.Table<Category>().ToListAsync();
-            foreach (var category in categories)
-            {
-                this.ViewModel.Categories.Add(new CategoryViewModel() { Name = category.Name });
-            }
-        }
-
-        public async void GetAllSubCategoriesAsync()
-        {
-            var connection = this.GetDbConnectionAsync();
-            var subCategories = await connection.GetAllWithChildrenAsync<SubCategory>();
-        }
-
-        public async void GetAllData2()
-        {
-            var connection = this.GetDbConnectionAsync();
-            var expenses = await connection.GetAllWithChildrenAsync<Expense>();
-            foreach (var expense in expenses)
-            {
-            }
-
-        }
-
         public async void GetAllData()
         {
             var connection = this.GetDbConnectionAsync();
 
-            var categories = await connection.GetAllWithChildrenAsync<Category>();
-
-
-            var expenses = await connection.GetAllWithChildrenAsync<Expense>();
-
+            var categories = await connection.GetAllWithChildrenAsync<Category>(null,true);
 
             foreach (var category in categories)
             {
@@ -304,21 +274,6 @@ namespace WhereDidTheMoneyGo.Pages
 
                 this.ViewModel.Categories.Add(newCategoryViewModel);
             }
-        }
-
-        public static double GetExpenses(List<Expense> expenses)
-        {
-            var amount = 0.0;
-            if (expenses == null)
-            {
-                return amount;
-            }
-
-            foreach (var expense in expenses)
-            {
-                amount += expense.Amount;
-            }
-            return amount;
         }
     }
 }
