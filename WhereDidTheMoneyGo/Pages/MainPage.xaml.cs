@@ -249,7 +249,7 @@ namespace WhereDidTheMoneyGo.Pages
         {
             var connection = this.GetDbConnectionAsync();
 
-            var categories = await connection.GetAllWithChildrenAsync<Category>(null,true);
+            var categories = await connection.GetAllWithChildrenAsync<Category>(null, true);
 
             foreach (var category in categories)
             {
@@ -274,6 +274,21 @@ namespace WhereDidTheMoneyGo.Pages
 
                 this.ViewModel.Categories.Add(newCategoryViewModel);
             }
+        }
+
+        public static double GetExpenses(List<Expense> expenses)
+        {
+            var amount = 0.0;
+            if (expenses == null)
+            {
+                return amount;
+            }
+
+            foreach (var expense in expenses)
+            {
+                amount += expense.Amount;
+            }
+            return amount;
         }
     }
 }
