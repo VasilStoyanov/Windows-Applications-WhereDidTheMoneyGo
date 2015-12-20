@@ -86,10 +86,18 @@ namespace WhereDidTheMoneyGo.Pages
             return asyncConnection;
         }
 
+        //private void OnShowNewCategoryMenuClick(object sender, RoutedEventArgs e)
+        //{
+        //    var oldValue = AnimationsProperties.GetShowHideValue(this.newCategory);
+        //    AnimationsProperties.SetShowHideValue(this.newCategory, !oldValue);
+
         public async void GetAllData(int month, int year, string selectedCategory)
         {
             var connection = this.GetDbConnectionAsync();
 
+        public async void GetAllData(int month, int year, string selectedCategory)
+        {
+            var connection = this.GetDbConnectionAsync();
             var categories = await connection.GetAllWithChildrenAsync<Category>(null, true);
 
             foreach (var category in categories)
@@ -155,9 +163,32 @@ namespace WhereDidTheMoneyGo.Pages
             }
 
         }
+        //    if (oldValue)
+        //    {
+        //        this.appBarButton.Icon = new SymbolIcon(Symbol.Remove);
+        //    }
+        //    else
+        //    {
+        //        this.appBarButton.Icon = new SymbolIcon(Symbol.Add);
+        //    }
+        //}
 
+        private void OnNewExpenceAddClick(object sender, RoutedEventArgs e)
         public static double GetExpenses(List<Expense> expenses, int month, int year)
         {
+            this.Frame.Navigate(typeof(AddNewExpence)); 
+            //    var newCategoryName = this.nameOfCategory.Text;
+            //    if (categoryNameIsValid)
+            //    {
+            //        var newCategory = new CategoryItemViewModel()
+            //        {
+            //            /*Category = CategoryViewModel.Food,*/ // TODO - fix it later
+            //            SubCategories = new ObservableCollection<SubCategoryItemViewModel>(),
+            //            Amount = DefaultValues.DefaultCategoryValue
+            //        };
+
+        public static double GetExpenses(List<Expense> expenses, int month, int year)
+{
             var amount = 0.0;
             if (expenses == null)
             {
@@ -172,107 +203,6 @@ namespace WhereDidTheMoneyGo.Pages
                 }
             }
             return amount;
-        }
-
-        private void ValidateText(object sender, KeyRoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-            //    var correct = true;
-            //    if (this.nameOfCategory.Text.ToLower().Contains(BadWords.Naughty))
-            //    {
-            //        SetBorder(!correct);
-            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageForBadName;
-            //    }
-            //    else if (this.nameOfCategory.Text.ToLower().Contains(BadWords.FWord))
-            //    {
-            //        SetBorder(!correct);
-            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageForBadName;
-            //    }
-            //    else if (this.nameOfCategory.Text.Length >= DefaultValues.MaximumLengthOfCategoryName)
-            //    {
-            //        SetBorder(!correct);
-            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageTooLongName;
-            //    }
-            //    else if (this.nameOfCategory.Text.Length <= DefaultValues.MinimumLengthOfCategoryName)
-            //    {
-            //        SetBorder(!correct);
-            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
-            //    }
-            //    else if(this.categoryNames.Contains(this.nameOfCategory.Text.ToLower()))
-            //    {
-            //        SetBorder(!correct);
-            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageNameAlreadyExist;
-            //    }
-            //    else
-            //    {
-            //        SetBorder(correct);
-            //    }
-        }
-
-        private void SetBorder(bool correct)
-        {
-            if (correct)
-            {
-                this.nameOfCategory.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
-                this.categoryNameIsValid = true;
-            }
-            else
-            {
-                this.nameOfCategory.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-                this.categoryNameIsValid = false;
-            }
-        }
-
-        private void NotifyUserMessage(bool isValid, string name)
-        {
-            if (isValid)
-            {
-                var oldValue = AnimationsProperties.GetShowHideValue(this.notificationBox);
-                AnimationsProperties.SetShowHideValue(this.notificationBox, !oldValue);
-
-                var timer = new DispatcherTimer();
-                var stopWatch = new Stopwatch();
-                timer.Interval = TimeSpan.FromMilliseconds(15);
-                timer.Start();
-                stopWatch.Start();
-                timer.Tick += (sender, args) =>
-                {
-                    if (stopWatch.ElapsedMilliseconds >= 2000)
-                    {
-                        timer.Stop();
-                        stopWatch.Stop();
-                        this.notificationBox.Visibility = Visibility.Collapsed;
-                        return;
-                    }
-                };
-
-                this.notificationBox.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
-                this.notificationBox.Text = string.Format("Successfuly added category {0}", name);
-            }
-            else
-            {
-                var oldValue = AnimationsProperties.GetShowHideValue(this.notificationBox);
-                AnimationsProperties.SetShowHideValue(this.notificationBox, !oldValue);
-
-                var timer = new DispatcherTimer();
-                var stopWatch = new Stopwatch();
-                timer.Interval = TimeSpan.FromMilliseconds(15);
-                timer.Start();
-                stopWatch.Start();
-                timer.Tick += (sender, args) =>
-                {
-                    if (stopWatch.ElapsedMilliseconds >= 2000)
-                    {
-                        timer.Stop();
-                        stopWatch.Stop();
-                        this.notificationBox.Visibility = Visibility.Collapsed;
-                        return;
-                    }
-                };
-
-                this.notificationBox.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-                this.notificationBox.Text = this.reasonForFailMessage;
-            }
         }
 
         private void OnShowNewCategoryMenuClick(object sender, RoutedEventArgs e)
