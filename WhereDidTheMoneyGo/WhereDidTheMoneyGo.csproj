@@ -109,6 +109,7 @@
     <Compile Include="Pages\AddNewExpence.xaml.cs">
       <DependentUpon>AddNewExpence.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\AttachedProperties\AnimationsProperties.cs" />
     <Compile Include="Pages\ListExpenses.xaml.cs">
       <DependentUpon>ListExpenses.xaml</DependentUpon>
     </Compile>

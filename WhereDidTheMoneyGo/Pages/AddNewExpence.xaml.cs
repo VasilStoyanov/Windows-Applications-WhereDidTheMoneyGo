@@ -231,17 +231,17 @@ namespace WhereDidTheMoneyGo.Pages
             return result;
         }
 
-        private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
-        {
-            if (this.newCategory.Visibility == Visibility.Collapsed)
-            {
-                this.newCategory.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                this.newCategory.Visibility = Visibility.Collapsed;
-            }
-        }
+        //private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
+        //{
+        //    if (this.newCategory.Visibility == Visibility.Collapsed)
+        //    {
+        //        this.newCategory.Visibility = Visibility.Visible;
+        //    }
+        //    else
+        //    {
+        //        this.newCategory.Visibility = Visibility.Collapsed;
+        //    }
+        //}
 
         private async void OnSaveButtonClick(object sender, RoutedEventArgs e)
         {
