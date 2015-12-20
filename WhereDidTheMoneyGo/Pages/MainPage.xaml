@@ -127,18 +127,6 @@
                 <ColumnDefinition Width="8.5*"/>
                 <ColumnDefinition Width="1.5*"/>
             </Grid.ColumnDefinitions>
-            <TextBox Name="nameOfCategory"
-                     HorizontalAlignment="Stretch"
-                     VerticalAlignment="Center"
-                     Grid.Row="0"
-                     PlaceholderText="Name"
-                     Grid.Column="0"                
-                     KeyUp="ValidateText"/>
-            <Button Content="Add"
-                    HorizontalAlignment="Stretch"
-                    Grid.Row="0" 
-                    Grid.Column="1"
-                    Click="OnCreateNewCategoryClick"/>
         </Grid>
     </Grid>
 
@@ -146,8 +134,8 @@
         <CommandBar Background="CornflowerBlue">
             <AppBarButton Name="appBarButton"
                           Icon="Add"
-                          Label="New category"
-                          Click="OnShowNewCategoryMenuClick"/>
+                          Label="Add new expense"
+                          Click="OnNewExpenceAddClick"/>
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

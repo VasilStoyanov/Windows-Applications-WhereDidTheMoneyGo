@@ -4,16 +4,20 @@ using SQLite.Net.Platform.WinRT;
 using SQLiteNetExtensionsAsync.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using WhereDidTheMoneyGo.AttachedProperties;
+using WhereDidTheMoneyGo.Common;
 using WhereDidTheMoneyGo.DataModels;
 using WhereDidTheMoneyGo.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -31,13 +35,18 @@ namespace WhereDidTheMoneyGo.Pages
     /// </summary>
     public sealed partial class AddNewExpence : Page
     {
+        private bool validAmount;
+        private bool validDescription;
+        private string currentText;
+        private string reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
+        private object lastSender;
+
         public AddNewExpence()
         {
             this.InitializeComponent();
             this.InitAsync();
             this.ViewModel = new AddExpenseViewModel();
-
-            this.newCategory.Visibility = Visibility.Collapsed;
+            this.PopulateCategoriesAsync();
         }
 
         public AddExpenseViewModel ViewModel
@@ -166,16 +175,26 @@ namespace WhereDidTheMoneyGo.Pages
                 }
                 await connection.UpdateWithChildrenAsync(categoryTransportation);
             }
-
-
-
         }
 
         public async Task<List<Category>> GetAllCategoriesAsync()
         {
             var connection = this.GetDbConnectionAsync();
             var result = await connection.Table<Category>().ToListAsync();
+
             return result;
+        }
+
+        public async void PopulateCategoriesAsync()
+        {
+            var connection = this.GetDbConnectionAsync();
+            var allCategories = await connection.Table<Category>().ToListAsync();
+
+            foreach (var category in allCategories)
+            {
+                var newCategoryViewModel = new CategoryViewModel { Name = category.Name };
+                this.ViewModel.Categories.Add(newCategoryViewModel);
+            }
         }
 
         public async Task<Category> GetCategoriesAsync(string categoryName)
@@ -205,18 +224,6 @@ namespace WhereDidTheMoneyGo.Pages
             return result;
         }
 
-        private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
-        {
-            if (this.newCategory.Visibility == Visibility.Collapsed)
-            {
-                this.newCategory.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                this.newCategory.Visibility = Visibility.Collapsed;
-            }
-        }
-
         private async Task<int> InsertExpenceAsync(Expense item)
         {
             var connection = this.GetDbConnectionAsync();
@@ -226,6 +233,11 @@ namespace WhereDidTheMoneyGo.Pages
 
         private async void OnSaveButtonClick(object sender, RoutedEventArgs e)
         {
+            if(!validAmount || !validDescription)
+            {
+                return;
+            }
+
             var connection = this.GetDbConnectionAsync();
 
             var amount = 0.0;
@@ -245,6 +257,7 @@ namespace WhereDidTheMoneyGo.Pages
             };
 
             await this.InsertExpenceAsync(item);
+            this.Frame.Navigate(typeof(MainPage));
         }
 
         private async void OntbCategorySelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -265,5 +278,141 @@ namespace WhereDidTheMoneyGo.Pages
                 this.ViewModel.SubCategories.Add(newSubCategoryViewModel);
             }
         }
+        
+        private void AmountNotifier(object sender, KeyRoutedEventArgs e)
+        {
+            this.currentText = this.tbAmount.Text;
+            lastSender = this.tbAmount;
+            double pesho;
+            if(double.TryParse(this.currentText, out pesho))
+            {
+                if(pesho >= double.MaxValue)
+                {
+                    this.SetBorder(false);
+                    reasonForFailMessage = NotificationMessages.NotifyMessageAmmountTooBig;
+                    this.validAmount = false;
+                    return;
+                }
+                else if (pesho <= 0)
+                {
+                    this.SetBorder(false);
+                    reasonForFailMessage = NotificationMessages.NotifyMessageAmmountTooSmall;
+                    this.validAmount = false;
+                    return;
+                }
+
+                this.validAmount = true;
+                this.SetBorder(true);
+                return;
+            }
+            this.validAmount = false;
+            this.SetBorder(false);
+        }
+
+        private void DescriptionNotifier(object sender, KeyRoutedEventArgs e)
+        {
+            this.currentText = this.tbDescription.Text;
+            lastSender = this.tbDescription;
+            ValidateDescription(this.currentText);
+        }
+
+        private void ValidateDescription(string text)
+        {
+            var correct = true;
+            if (text.ToLower().Contains(BadWords.Naughty))
+            {
+                this.validDescription = false;
+                SetBorder(!correct);
+                this.reasonForFailMessage = NotificationMessages.NotifyMessageForBadName;
+            }
+            else if (text.ToLower().Contains(BadWords.FWord))
+            {
+                this.validDescription = false;
+                SetBorder(!correct);
+                this.reasonForFailMessage = NotificationMessages.NotifyMessageForBadName;
+            }
+            else if (text.Length >= DefaultValues.MaximumLengthOfCategoryName)
+            {
+                this.validDescription = false;
+                SetBorder(!correct);
+                this.reasonForFailMessage = NotificationMessages.NotifyMessageTooLongName;
+            }
+            else if (text.Length <= DefaultValues.MinimumLengthOfCategoryName)
+            {
+                this.validDescription = false;
+                SetBorder(!correct);
+                this.reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
+            }
+            else
+            {
+                this.validDescription = true;
+                SetBorder(correct);
+            }
+        }
+
+        private void SetBorder(bool correct)
+        {
+            var element = lastSender as TextBox;
+            if (correct)
+            {
+                element.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
+            }
+            else
+            {
+                element.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+            }
+        }
+
+        //private void NotifyUserMessage(bool isValid, string name)
+        //{
+        //    if (isValid)
+        //    {
+        //        var oldValue = AnimationsProperties.GetShowHideValue(this.notificationText);
+        //        AnimationsProperties.SetShowHideValue(this.notificationText, !oldValue);
+
+        //        var timer = new DispatcherTimer();
+        //        var stopWatch = new Stopwatch();
+        //        timer.Interval = TimeSpan.FromMilliseconds(15);
+        //        timer.Start();
+        //        stopWatch.Start();
+        //        timer.Tick += (sender, args) =>
+        //        {
+        //            if (stopWatch.ElapsedMilliseconds >= 3000)
+        //            {
+        //                timer.Stop();
+        //                stopWatch.Stop();
+        //                this.notificationText.Visibility = Visibility.Collapsed;
+        //                return;
+        //            }
+        //        };
+
+        //        this.notificationText.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
+        //        this.notificationText.Text = string.Format("Successfuly added category {0}", name);
+        //    }
+        //    else
+        //    {
+        //        var oldValue = AnimationsProperties.GetShowHideValue(this.notificationText);
+        //        AnimationsProperties.SetShowHideValue(this.notificationText, !oldValue);
+
+        //        var timer = new DispatcherTimer();
+        //        var stopWatch = new Stopwatch();
+        //        timer.Interval = TimeSpan.FromMilliseconds(15);
+        //        timer.Start();
+        //        stopWatch.Start();
+        //        timer.Tick += (sender, args) =>
+        //        {
+        //            if (stopWatch.ElapsedMilliseconds >= 3000)
+        //            {
+        //                timer.Stop();
+        //                stopWatch.Stop();
+        //                this.notificationText.Visibility = Visibility.Collapsed;
+        //                return;
+        //            }
+        //        };
+
+        //        this.notificationText.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+        //        this.notificationText.Text = this.reasonForFailMessage;
+        //    }
+        //}
     }
 }
