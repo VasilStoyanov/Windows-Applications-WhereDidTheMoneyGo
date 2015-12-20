@@ -4,9 +4,23 @@
     using System.Collections.ObjectModel;
     using System.Linq;
 
-    public class ListExpensesViewModel
+    public class ListExpensesViewModel: BaseViewModel
     {
         private ObservableCollection<ExpenceViewModel> expenses;
+        private string selectedParameters;
+
+        public string SelectedParameters
+        {
+            get
+            {
+                return this.selectedParameters;
+            }
+            set
+            {
+                this.selectedParameters = value;
+                NotifyOnPropertyChange("SelectedParameters");
+            }
+        }
 
         public ListExpensesViewModel()
         {

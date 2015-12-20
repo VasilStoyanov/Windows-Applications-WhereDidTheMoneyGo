@@ -121,6 +121,7 @@
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\CategoryViewModel.cs" />
     <Compile Include="ViewModels\ExpenceViewModel.cs" />
+    <Compile Include="ViewModels\ListExpensesParametersViewModel.cs" />
     <Compile Include="ViewModels\ListExpensesViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\SubCategoryViewModel.cs" />

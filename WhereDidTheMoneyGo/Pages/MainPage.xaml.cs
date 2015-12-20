@@ -39,6 +39,7 @@ namespace WhereDidTheMoneyGo.Pages
     {
         private bool categoryNameIsValid = false;
         private string reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
+        private Point initialpoint;
 
         public MainPage()
         {
@@ -275,20 +276,20 @@ namespace WhereDidTheMoneyGo.Pages
             }
         }
 
-        private void OnShowNewCategoryMenuClick(object sender, RoutedEventArgs e)
-        {
-            var oldValue = AnimationsProperties.GetShowHideValue(this.newCategory);
-            AnimationsProperties.SetShowHideValue(this.newCategory, !oldValue);
+        //private void OnShowNewCategoryMenuClick(object sender, RoutedEventArgs e)
+        //{
+        //    var oldValue = AnimationsProperties.GetShowHideValue(this.newCategory);
+        //    AnimationsProperties.SetShowHideValue(this.newCategory, !oldValue);
 
-            if (oldValue)
-            {
-                this.appBarButton.Icon = new SymbolIcon(Symbol.Remove);
-            }
-            else
-            {
-                this.appBarButton.Icon = new SymbolIcon(Symbol.Add);
-            }
-        }
+        //    if (oldValue)
+        //    {
+        //        this.appBarButton.Icon = new SymbolIcon(Symbol.Remove);
+        //    }
+        //    else
+        //    {
+        //        this.appBarButton.Icon = new SymbolIcon(Symbol.Add);
+        //    }
+        //}
 
         private void onDatePickerDateChanged(object sender, DatePickerValueChangedEventArgs e)
         {
@@ -331,7 +332,33 @@ namespace WhereDidTheMoneyGo.Pages
 
         private void OnDoubleTap(object sender, DoubleTappedRoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(ListExpenses));
+            var category = this.lbMain.SelectedValue.ToString();
+            var month = this.datePicker.Date.Month;
+            var year = this.datePicker.Date.Year;
+            var expenseParameter = new ListExpensesParametersViewModel() { SelectedCategory = category, SelectedMonth = month, SelectedYear= year};
+            this.Frame.Navigate(typeof(ListExpenses), expenseParameter);
+        }
+
+        private void lbMain_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            initialpoint = e.Position;
+        }
+
+        private void lbMain_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            if (e.IsInertial)
+            {
+                Point currentpoint = e.Position;
+                if (currentpoint.X - initialpoint.X >= 500)//500 is the threshold value, where you want to trigger the swipe right event
+                {
+                    var category = this.lbMain.SelectedValue.ToString();
+                    var month = this.datePicker.Date.Month;
+                    var year = this.datePicker.Date.Year;
+                    var expenseParameter = new ListExpensesParametersViewModel() { SelectedCategory = category, SelectedMonth = month, SelectedYear = year };
+                    this.Frame.Navigate(typeof(ListExpenses), expenseParameter);
+                    e.Complete();
+                }
+            }
         }
     }
 }

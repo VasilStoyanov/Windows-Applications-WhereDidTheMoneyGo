@@ -10,18 +10,22 @@
     <Page.Resources>
         <DataTemplate x:Key="categoriesDataTemplate">
             <StackPanel>
-                <Grid Background="LightBlue">
+                <Grid Background="LightBlue" DoubleTapped="ListBox_DoubleTapped">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1.5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Row="0"
                                Grid.Column="0"
                                Text="{Binding Description}"
                                Style="{StaticResource CategoriesTextBoxStyle}"/>
-
                     <TextBlock Grid.Row="0"
                                Grid.Column="1"
+                               Text="{Binding Date}"                              
+                               Style="{StaticResource AmountsTextBoxStyle}"/>
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="2"
                                Text="{Binding Amount}"                              
                                Style="{StaticResource AmountsTextBoxStyle}"/>
                 </Grid>
@@ -31,6 +35,8 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -43,12 +49,39 @@
                            FontWeight="Bold" 
                            Text="All expenses"/>
         </Border>
+        <TextBlock Grid.Row="1" Grid.Column="0"
+                       HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           FontSize="18" 
+                           FontWeight="Bold" 
+                            Foreground="Black"
+                           Text="{Binding SelectedParameters}"/>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1.5*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Text="Description"
+                               Style="{StaticResource CategoriesTextBoxStyle}"/>
 
-        <ListBox Grid.Row="1" 
+            <TextBlock Grid.Row="0"
+                               Grid.Column="1"
+                               Text="Date"                              
+                               Style="{StaticResource AmountsTextBoxStyle}"/>
+            <TextBlock Grid.Row="0"
+                               Grid.Column="2"
+                               Text="Amount"                              
+                               Style="{StaticResource AmountsTextBoxStyle}"/>
+        </Grid>
+        <ListBox Grid.Row="3" 
                      Grid.Column="0" 
                      Grid.ColumnSpan="3" 
                      ItemsSource="{Binding Expenses}"
-                     ItemTemplate="{StaticResource categoriesDataTemplate}">
+                     ItemTemplate="{StaticResource categoriesDataTemplate}"
+                     SelectedValuePath="Expenses.Id">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -57,7 +90,7 @@
         </ListBox>
 
         <!--Add new Category-->
-        <Grid Grid.Row="2" 
+        <Grid Grid.Row="4" 
             Name="newCategory"
               VerticalAlignment="Center" 
               Background="Aquamarine"

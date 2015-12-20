@@ -12,22 +12,24 @@
 
     <Page.Resources>
         <DataTemplate x:Key="categoriesDataTemplate">
-            <StackPanel>
-                <Grid Background="LightBlue">
+            <StackPanel DoubleTapped="OnDoubleTap">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="{Binding ElementName=mainGrid,Path=ColumnDefinitions[0].Width}"/>
                         <ColumnDefinition Width="{Binding ElementName=mainGrid,Path=ColumnDefinitions[1].Width}"/>
                     </Grid.ColumnDefinitions>
+                    <Border Style="{StaticResource BorderStyle}">
                     <TextBlock Grid.Row="0"
                                Grid.Column="0"
                                Text="{Binding Name}"
-                               DoubleTapped="OnDoubleTap"
                                Style="{StaticResource CategoriesTextBoxStyle}"/>
-
-                    <TextBlock Grid.Row="0"
+                    </Border>
+                    <Border Style="{StaticResource BorderStyle}">
+                        <TextBlock Grid.Row="0"
                                Grid.Column="1"
                                Text="{Binding Amount}"                              
                                Style="{StaticResource AmountsTextBoxStyle}"/>
+                    </Border>
                 </Grid>
                 <ItemsControl ItemsSource="{Binding SubCategories}" >
                     <ItemsControl.ItemTemplate>
@@ -49,9 +51,7 @@
 
     <Grid Background="#d5e0ff">
         <Grid.RowDefinitions>
-            <RowDefinition Height="4.5*"/>
-            <RowDefinition Height="0.280*"/>
-            <RowDefinition Height="0.6*"/>
+            <RowDefinition />
         </Grid.RowDefinitions>
         <TextBlock Name="notificationBox"
                    Grid.Row="1"
@@ -107,7 +107,9 @@
                      ItemsSource="{Binding Categories}"
                      ItemTemplate="{StaticResource categoriesDataTemplate}"
                      SelectedValuePath="Name"
-                     SelectionChanged="onlbMain_SelectionChanged">
+                     SelectionChanged="onlbMain_SelectionChanged"
+                     ManipulationStarted="lbMain_ManipulationStarted"
+                     ManipulationDelta="lbMain_ManipulationDelta">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -118,7 +120,7 @@
         </Grid>
 
         <!--Add new Category-->
-        <Grid Grid.Row="2"
+        <!--<Grid Grid.Row="2"
               Name="newCategory"
               VerticalAlignment="Bottom" 
               Background="CornflowerBlue"
@@ -132,7 +134,7 @@
                 <ColumnDefinition Width="8.5*"/>
                 <ColumnDefinition Width="1.5*"/>
             </Grid.ColumnDefinitions>
-        </Grid>
+        </Grid>-->
     </Grid>
 
     <Page.BottomAppBar>
