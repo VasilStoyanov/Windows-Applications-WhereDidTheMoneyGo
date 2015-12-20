@@ -39,17 +39,21 @@ namespace WhereDidTheMoneyGo.Pages
     {
         private bool categoryNameIsValid = false;
         private string reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
-        //// Temporary
-        //private ObservableCollection<CategoryItemViewModel> categories = new ObservableCollection<CategoryItemViewModel>();
-        //private ObservableCollection<SubCategoryItemViewModel> categoryItems = new ObservableCollection<SubCategoryItemViewModel>();
-        //private HashSet<string> categoryNames = new HashSet<string>();
 
         public MainPage()
         {
             this.InitializeComponent();
-            
+
             this.ViewModel = new MainPageViewModel();
-            this.GetAllData();
+            var showMonth = this.datePicker.Date.Month;
+            var showYear = this.datePicker.Date.Year;
+            var selectedCategory = string.Empty;
+
+            if (this.lbMain.SelectedItem != null)
+            {
+                selectedCategory = this.lbMain.SelectedItem.ToString();
+            }
+            this.GetAllData(showMonth, showYear, selectedCategory);
 
             this.notificationBox.Visibility = Visibility.Collapsed;
         }
@@ -82,44 +86,92 @@ namespace WhereDidTheMoneyGo.Pages
             return asyncConnection;
         }
 
-        private void OnShowNewCategoryMenuClick(object sender, RoutedEventArgs e)
+        public async void GetAllData(int month, int year, string selectedCategory)
         {
-            var oldValue = AnimationsProperties.GetShowHideValue(this.newCategory);
-            AnimationsProperties.SetShowHideValue(this.newCategory, !oldValue);
+            var connection = this.GetDbConnectionAsync();
 
-            if (oldValue)
+            var categories = await connection.GetAllWithChildrenAsync<Category>(null, true);
+
+            foreach (var category in categories)
             {
-                this.appBarButton.Icon = new SymbolIcon(Symbol.Remove);
-            }
-            else
-            {
-                this.appBarButton.Icon = new SymbolIcon(Symbol.Add);
+                var categorySum = 0.0;
+                foreach (var expense in category.Expenses)
+                {
+                    if (expense.Date.Year == year && expense.Date.Month == month)
+                    {
+                        categorySum += expense.Amount;
+                    }
+                }
+
+
+                var newCategoryViewModel = new CategoryViewModel() { Name = category.Name, Amount = categorySum };
+
+                if (category.Name == selectedCategory)
+                {
+                    var newSubCategoryViewModel = new SubCategoryViewModel();
+                    category.SubCategories.ForEach(
+                        s => newCategoryViewModel.SubCategories.Add(
+                                                                new SubCategoryViewModel
+                                                                {
+                                                                    Name = s.Name,
+                                                                    Amount = GetExpenses(s.Expenses, month, year)
+                                                                })
+                    );
+                }
+
+                this.ViewModel.Categories.Add(newCategoryViewModel);
             }
         }
 
-        private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
+        public async void GetSubCategoriesOnly(int month, int year, string selectedCategory)
         {
-            throw new NotImplementedException();
-            //    var newCategoryName = this.nameOfCategory.Text;
-            //    if (categoryNameIsValid)
-            //    {
-            //        var newCategory = new CategoryItemViewModel()
-            //        {
-            //            /*Category = CategoryViewModel.Food,*/ // TODO - fix it later
-            //            SubCategories = new ObservableCollection<SubCategoryItemViewModel>(),
-            //            Amount = DefaultValues.DefaultCategoryValue
-            //        };
+            var connection = this.GetDbConnectionAsync();
 
-            //        this.categories.Add(newCategory);
-            //        this.categoryNames.Add(newCategoryName.ToLower());
-            //        NotifyUserMessage(true, newCategoryName);
-            //        this.nameOfCategory.Text = String.Empty;
-            //        this.categoryNameIsValid = false;
-            //    }
-            //    else
-            //    {
-            //        NotifyUserMessage(false, newCategoryName);
-            //    }
+            var subCategories = await connection.GetAllWithChildrenAsync<SubCategory>(null, true);
+
+            foreach (var subCategory in subCategories)
+            {
+
+                if (subCategory.Category.Name == selectedCategory)
+                {
+                    var newSubCategoryViewModel = new SubCategoryViewModel() { Name = subCategory.Name };
+                    var amount = 0.0;
+
+                    foreach (var expense in subCategory.Expenses)
+                    {
+                        newSubCategoryViewModel.Amount += expense.Amount;
+                    }
+
+
+                    var categoriesCount = this.ViewModel.Categories.Count;
+                    for (int i = 0; i < categoriesCount; i++)
+                    {
+                        if (this.ViewModel.Categories[i].Name == selectedCategory)
+                        {
+                            this.ViewModel.Categories[i].SubCategories.Add(newSubCategoryViewModel);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        public static double GetExpenses(List<Expense> expenses, int month, int year)
+        {
+            var amount = 0.0;
+            if (expenses == null)
+            {
+                return amount;
+            }
+
+            foreach (var expense in expenses)
+            {
+                if (expense.Date.Year == year && expense.Date.Month == month)
+                {
+                    amount += expense.Amount;
+                }
+            }
+            return amount;
         }
 
         private void ValidateText(object sender, KeyRoutedEventArgs e)
@@ -223,51 +275,78 @@ namespace WhereDidTheMoneyGo.Pages
             }
         }
 
-        public async void GetAllData()
+        private void OnShowNewCategoryMenuClick(object sender, RoutedEventArgs e)
         {
-            var connection = this.GetDbConnectionAsync();
+            var oldValue = AnimationsProperties.GetShowHideValue(this.newCategory);
+            AnimationsProperties.SetShowHideValue(this.newCategory, !oldValue);
 
-            var categories = await connection.GetAllWithChildrenAsync<Category>(null, true);
-
-            foreach (var category in categories)
+            if (oldValue)
             {
-                var categorySum = 0.0;
-                foreach (var expense in category.Expenses)
-                {
-                    categorySum += expense.Amount;
-                }
-
-
-                var newCategoryViewModel = new CategoryViewModel() { Name = category.Name, Amount = categorySum };
-
-                var newSubCategoryViewModel = new SubCategoryViewModel();
-                category.SubCategories.ForEach(
-                    s => newCategoryViewModel.SubCategories.Add(
-                                                            new SubCategoryViewModel
-                                                            {
-                                                                Name = s.Name,
-                                                                Amount = GetExpenses(s.Expenses)
-                                                            })
-                );
-
-                this.ViewModel.Categories.Add(newCategoryViewModel);
+                this.appBarButton.Icon = new SymbolIcon(Symbol.Remove);
+            }
+            else
+            {
+                this.appBarButton.Icon = new SymbolIcon(Symbol.Add);
             }
         }
 
-        public static double GetExpenses(List<Expense> expenses)
+        private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
         {
-            var amount = 0.0;
-            if (expenses == null)
-            {
-                return amount;
-            }
+            throw new NotImplementedException();
+            //    var newCategoryName = this.nameOfCategory.Text;
+            //    if (categoryNameIsValid)
+            //    {
+            //        var newCategory = new CategoryItemViewModel()
+            //        {
+            //            /*Category = CategoryViewModel.Food,*/ // TODO - fix it later
+            //            SubCategories = new ObservableCollection<SubCategoryItemViewModel>(),
+            //            Amount = DefaultValues.DefaultCategoryValue
+            //        };
 
-            foreach (var expense in expenses)
-            {
-                amount += expense.Amount;
-            }
-            return amount;
+            //        this.categories.Add(newCategory);
+            //        this.categoryNames.Add(newCategoryName.ToLower());
+            //        NotifyUserMessage(true, newCategoryName);
+            //        this.nameOfCategory.Text = String.Empty;
+            //        this.categoryNameIsValid = false;
+            //    }
+            //    else
+            //    {
+            //        NotifyUserMessage(false, newCategoryName);
+            //    }
         }
 
+        private void onDatePickerDateChanged(object sender, DatePickerValueChangedEventArgs e)
+        {
+            this.ViewModel.Categories.Clear();
+            var showMonth = this.datePicker.Date.Month;
+            var showYear = this.datePicker.Date.Year;
+            var selectedCategory = string.Empty;
+            if (this.lbMain.SelectedItem != null)
+            {
+                selectedCategory = this.lbMain.SelectedValue.ToString();
+            }
+            this.GetAllData(showMonth, showYear, selectedCategory);
+        }
+
+        private void onlbMain_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var lb = sender as ListBox;
+            var selectedCategory = string.Empty;
+            if (lb.SelectedItem != null)
+            {
+                selectedCategory = lb.SelectedValue.ToString();
+            }
+            
+            var showMonth = this.datePicker.Date.Month;
+            var showYear = this.datePicker.Date.Year;
+
+            var categoriesCount = this.ViewModel.Categories.Count;
+            for (int i = 0; i < categoriesCount; i++)
+            {
+                this.ViewModel.Categories[i].SubCategories.Clear();
+            }
+
+            this.GetSubCategoriesOnly(showMonth, showYear, selectedCategory);
+        }
     }
 }

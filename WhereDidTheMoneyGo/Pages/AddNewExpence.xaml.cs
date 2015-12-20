@@ -36,6 +36,7 @@ namespace WhereDidTheMoneyGo.Pages
             this.InitializeComponent();
             this.InitAsync();
             this.ViewModel = new AddExpenseViewModel();
+            this.PopulateCategoriesAsync();
 
             this.newCategory.Visibility = Visibility.Collapsed;
         }
@@ -166,16 +167,26 @@ namespace WhereDidTheMoneyGo.Pages
                 }
                 await connection.UpdateWithChildrenAsync(categoryTransportation);
             }
-
-
-
         }
 
         public async Task<List<Category>> GetAllCategoriesAsync()
         {
             var connection = this.GetDbConnectionAsync();
             var result = await connection.Table<Category>().ToListAsync();
+
             return result;
+        }
+
+        public async void PopulateCategoriesAsync()
+        {
+            var connection = this.GetDbConnectionAsync();
+            var allCategories = await connection.Table<Category>().ToListAsync();
+
+            foreach (var category in allCategories)
+            {
+                var newCategoryViewModel = new CategoryViewModel { Name = category.Name };
+                this.ViewModel.Categories.Add(newCategoryViewModel);
+            }
         }
 
         public async Task<Category> GetCategoriesAsync(string categoryName)
@@ -205,6 +216,13 @@ namespace WhereDidTheMoneyGo.Pages
             return result;
         }
 
+        private async Task<int> SaveExpenceAsync(Expense item)
+        {
+            var connection = this.GetDbConnectionAsync();
+            var result = await connection.InsertAsync(item);
+            return result;
+        }
+
         private void OnCreateNewCategoryClick(object sender, RoutedEventArgs e)
         {
             if (this.newCategory.Visibility == Visibility.Collapsed)
@@ -215,13 +233,6 @@ namespace WhereDidTheMoneyGo.Pages
             {
                 this.newCategory.Visibility = Visibility.Collapsed;
             }
-        }
-
-        private async Task<int> InsertExpenceAsync(Expense item)
-        {
-            var connection = this.GetDbConnectionAsync();
-            var result = await connection.InsertAsync(item);
-            return result;
         }
 
         private async void OnSaveButtonClick(object sender, RoutedEventArgs e)
@@ -244,7 +255,7 @@ namespace WhereDidTheMoneyGo.Pages
                 ImgUrl = this.tbImageUrl.Text
             };
 
-            await this.InsertExpenceAsync(item);
+            await this.SaveExpenceAsync(item);
         }
 
         private async void OntbCategorySelectionChanged(object sender, SelectionChangedEventArgs e)

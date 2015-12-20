@@ -10,12 +10,12 @@
     <Page.Resources>
         <DataTemplate x:Key="CategoriesDataTemplate">
             <StackPanel>
-                <TextBlock Text="{Binding CategoryName}"/>
+                <TextBlock Text="{Binding Name}"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="SubCategoriesDataTemplate">
             <StackPanel>
-                <TextBlock Text="{Binding SubCategoryName}"/>
+                <TextBlock Text="{Binding Name}"/>
             </StackPanel>
         </DataTemplate>
     </Page.Resources>
@@ -60,7 +60,7 @@
                 <ComboBox Name="tbCategory" 
                           ItemsSource="{Binding Categories}" 
                           ItemTemplate="{StaticResource CategoriesDataTemplate}" 
-                          SelectedValuePath="CategoryName"
+                          SelectedValuePath="Name"
                           SelectionChanged="OntbCategorySelectionChanged"
                           PlaceholderText="Add category" 
                           Grid.Row="1" 
@@ -70,7 +70,7 @@
                 <ComboBox Name="tbSubCategory" 
                           ItemsSource="{Binding SubCategories}" 
                           ItemTemplate="{StaticResource SubCategoriesDataTemplate}" 
-                          SelectedValuePath="SubCategoryName"
+                          SelectedValuePath="Name"
                           Grid.Row="2" Grid.Column="1"/>
                 
                 <TextBlock Text="Amount" Grid.Row="3" Grid.Column="0"/>
@@ -79,7 +79,7 @@
                 <TextBlock Text="Description" Grid.Row="4" Grid.Column="0"/>
                 <TextBox Name="tbDescription" PlaceholderText="Add Notes" Grid.Row="4" Grid.Column="1"/>
 
-                <TextBlock Text="{Binding CurrentCategory}" Grid.Row="5" Grid.Column="0"/>
+                <TextBlock Text="Image" Grid.Row="5" Grid.Column="0"/>
                 <TextBox Name="tbImageUrl" PlaceholderText="Add Image" Grid.Row="5" Grid.Column="1"/>
 
                 <Button Content="Save" Click="OnSaveButtonClick" HorizontalAlignment="Stretch" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"/>

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WhereDidTheMoneyGo.ViewModels
+﻿namespace WhereDidTheMoneyGo.ViewModels
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+
     public class MainPageViewModel
     {
         private ObservableCollection<CategoryViewModel> categories;

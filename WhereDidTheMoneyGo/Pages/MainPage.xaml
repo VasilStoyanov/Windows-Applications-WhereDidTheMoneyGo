@@ -92,6 +92,8 @@
                        Grid.Row="1"
                        Grid.ColumnSpan="3"/>
             <DatePicker Name="datePicker"
+                        DayVisible="False"
+                        DateChanged="onDatePickerDateChanged"
                         Background="#d5e0ff"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
@@ -102,7 +104,9 @@
                      Grid.Column="0" 
                      Grid.ColumnSpan="3" 
                      ItemsSource="{Binding Categories}"
-                     ItemTemplate="{StaticResource categoriesDataTemplate}">
+                     ItemTemplate="{StaticResource categoriesDataTemplate}"
+                     SelectedValuePath="Name"
+                     SelectionChanged="onlbMain_SelectionChanged">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
