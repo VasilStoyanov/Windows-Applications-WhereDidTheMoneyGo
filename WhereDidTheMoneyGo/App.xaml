@@ -16,6 +16,7 @@
         
         <Style x:Key="CategoriesTextBoxStyle" TargetType="TextBlock"  BasedOn="{StaticResource DefaultTextBoxStyle}">
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="TextAlignment" Value="Left"/>
@@ -24,14 +25,16 @@
         
         <Style x:Key="AmountsTextBoxStyle" TargetType="TextBlock" BasedOn="{StaticResource DefaultTextBoxStyle}">
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="TextAlignment" Value="Right"/>
-            <Setter Property="Margin" Value="0,0,0,1"/>
+            <Setter Property="Margin" Value="0,0,0,3"/>
         </Style>
         
         <Style x:Key="SubCategoriesTextBoxStyle" TargetType="TextBlock"  BasedOn="{StaticResource CategoriesTextBoxStyle}">
             <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Normal"/>
             <Setter Property="FontStyle" Value="Italic"/>
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -40,12 +43,18 @@
         <Style x:Key="SubCategoryAmountsTextBoxStyle" TargetType="TextBlock" BasedOn="{StaticResource AmountsTextBoxStyle}">
             <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="FontWeight" Value="Normal"/>
             <Setter Property="FontStyle" Value="Italic"/>
             <Setter Property="FontSize" Value="13"/>
         </Style>
 
         <Style x:Key="BorderStyle" TargetType="Border">
-            <Setter Property="BorderBrush" Value="LightBlue"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        </Style>
+
+        <Style x:Key="BorderStyleSubCategory" TargetType="Border">
+            <Setter Property="BorderBrush" Value="LightGray"/>
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
         </Style>
 

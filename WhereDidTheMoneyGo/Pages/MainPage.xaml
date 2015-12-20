@@ -39,8 +39,12 @@
                                     <ColumnDefinition Width="{Binding ElementName=mainGrid,Path=ColumnDefinitions[0].Width}"/>
                                     <ColumnDefinition Width="{Binding ElementName=mainGrid,Path=ColumnDefinitions[1].Width}"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}" Style="{StaticResource SubCategoriesTextBoxStyle}"/>
-                                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Amount}" Style="{StaticResource SubCategoryAmountsTextBoxStyle}"/>
+                                <Border Style="{StaticResource BorderStyleSubCategory}">
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}" Style="{StaticResource SubCategoriesTextBoxStyle}"/>
+                                </Border>
+                                <Border Style="{StaticResource BorderStyleSubCategory}">
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Amount}" Style="{StaticResource SubCategoryAmountsTextBoxStyle}"/>
+                                </Border>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -64,7 +68,7 @@
               Grid.Row="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="40"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -94,10 +98,11 @@
                        Grid.ColumnSpan="3"/>
             <DatePicker Name="datePicker"
                         DayVisible="False"
+                        Width="50"
                         DateChanged="onDatePickerDateChanged"
-                        Background="#d5e0ff"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Center"
+                        Background="Black"
+                        Foreground="White"
                         Grid.ColumnSpan="3"
                         Grid.Row="1"/>
             <ListBox Name="lbMain"
