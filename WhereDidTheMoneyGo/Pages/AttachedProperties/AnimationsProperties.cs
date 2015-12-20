@@ -49,7 +49,7 @@
                     element.Opacity -= 0.1;
 
                 };
-                timer.Interval = TimeSpan.FromMilliseconds(15);
+                timer.Interval = TimeSpan.FromMilliseconds(50);
                 timer.Start();
             }
             else
@@ -66,7 +66,7 @@
                     element.Opacity += 0.1;
 
                 };
-                timer.Interval = TimeSpan.FromMilliseconds(15);
+                timer.Interval = TimeSpan.FromMilliseconds(50);
                 timer.Start();
             }
         }
