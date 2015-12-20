@@ -1,39 +1,19 @@
-﻿using SQLite.Net;
-using SQLite.Net.Async;
-using SQLite.Net.Platform.WinRT;
-using SQLiteNetExtensionsAsync.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
-using WhereDidTheMoneyGo.AttachedProperties;
-using WhereDidTheMoneyGo.Common;
-using WhereDidTheMoneyGo.DataModels;
-using WhereDidTheMoneyGo.ViewModels;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
-using Windows.UI;
-using Windows.UI.Notifications;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
-namespace WhereDidTheMoneyGo.Pages
+﻿namespace WhereDidTheMoneyGo.Pages
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+    using Data;
+    using System;
+    using System.Threading.Tasks;
+    using WhereDidTheMoneyGo.AttachedProperties;
+    using WhereDidTheMoneyGo.Common;
+    using WhereDidTheMoneyGo.DataModels;
+    using WhereDidTheMoneyGo.ViewModels;
+    using Windows.UI;
+    using Windows.UI.Notifications;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Input;
+    using Windows.UI.Xaml.Media;
+
     public sealed partial class AddNewExpence : Page
     {
         private bool validAmount;
@@ -45,9 +25,10 @@ namespace WhereDidTheMoneyGo.Pages
         public AddNewExpence()
         {
             this.InitializeComponent();
-            this.InitAsync();
             this.ViewModel = new AddExpenseViewModel();
-            this.PopulateCategoriesAsync();
+            DatabaseConnections.ViewModel = this.ViewModel;
+            DatabaseConnections.InitAsync();
+            DatabaseConnections.PopulateCategoriesAsync();
 
             var oldSaveButtonValue = AnimationsProperties.GetShowHideValue(this.saveButton);
             AnimationsProperties.SetShowHideValue(this.saveButton, !oldSaveButtonValue);
@@ -68,176 +49,6 @@ namespace WhereDidTheMoneyGo.Pages
             }
         }
 
-        public SQLiteAsyncConnection GetDbConnectionAsync()
-        {
-            var dbFilePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "db.sqlite");
-
-            var connectionFactory =
-                new Func<SQLiteConnectionWithLock>(
-                    () =>
-                    new SQLiteConnectionWithLock(
-                        new SQLitePlatformWinRT(),
-                        new SQLiteConnectionString(dbFilePath, storeDateTimeAsTicks: false)));
-
-            var asyncConnection = new SQLiteAsyncConnection(connectionFactory);
-
-            return asyncConnection;
-        }
-
-        public async void InitAsync()
-        {
-            var connection = this.GetDbConnectionAsync();
-            await connection.CreateTableAsync<SubCategory>();
-            await connection.CreateTableAsync<Category>();
-            await connection.CreateTableAsync<Expense>();
-
-            var numberOfCategories = (await this.GetAllCategoriesAsync()).Count;
-
-            if (numberOfCategories == 0)
-            {
-                // Insert all categories
-                var categoryFood = new Category() { Name = "Food" };
-                var categoryHousing = new Category() { Name = "Housing" };
-                var categoryPersonal = new Category() { Name = "Personal" };
-                var categoryTransportation = new Category() { Name = "Transportation" };
-
-                var categories = new List<Category>()
-                                {
-                                    categoryFood,
-                                    categoryHousing,
-                                    categoryPersonal,
-                                    categoryTransportation
-                                };
-                await connection.InsertAllAsync(categories);
-
-                // Insert Food sub-categories
-                var subCategoriesFood = new List<SubCategory>()
-                                {
-                                    new SubCategory() { Name = "Groceries" },
-                                    new SubCategory() { Name = "Restaurants" },
-                                    new SubCategory() { Name = "Lunch/Snacks" },
-                                };
-                await connection.InsertAllAsync(subCategoriesFood);
-                categoryFood.SubCategories = new List<SubCategory>();
-                foreach (var item in subCategoriesFood)
-                {
-                    categoryFood.SubCategories.Add(item);
-                }
-                await connection.UpdateWithChildrenAsync(categoryFood);
-
-                // Insert Housing sub-categories
-                var subCategoriesHousing = new List<SubCategory>()
-                                {
-                                    new SubCategory() { Name = "Mortgage/Rent" },
-                                    new SubCategory() { Name = "Electricity" },
-                                    new SubCategory() { Name = "Garage" },
-                                    new SubCategory() { Name = "Water" },
-                                    new SubCategory() { Name = "TV / Internet" },
-                                    new SubCategory() { Name = "Heating" },
-                                    new SubCategory() { Name = "Maintenance & Repairs" }
-                                };
-                await connection.InsertAllAsync(subCategoriesHousing);
-                categoryHousing.SubCategories = new List<SubCategory>();
-                foreach (var item in subCategoriesHousing)
-                {
-                    categoryHousing.SubCategories.Add(item);
-                }
-                await connection.UpdateWithChildrenAsync(categoryHousing);
-
-                // Insert Personal sub-categories
-                var subCategoriesPersonal = new List<SubCategory>()
-                                {
-                                    new SubCategory() { Name = "Health" },
-                                    new SubCategory() { Name = "Beauty" },
-                                    new SubCategory() { Name = "Clothes" },
-                                    new SubCategory() { Name = "Gadgets" },
-                                    new SubCategory() { Name = "Entertainment" },
-                                    new SubCategory() { Name = "Credit card Payment" },
-                                    new SubCategory() { Name = "Gifts" },
-                                    new SubCategory() { Name = "Vacation" },
-                                    new SubCategory() { Name = "Education" },
-                                    new SubCategory() { Name = "Miscellaneous" },
-                                    new SubCategory() { Name = "Car Payment" }
-                                };
-                await connection.InsertAllAsync(subCategoriesPersonal);
-                categoryPersonal.SubCategories = new List<SubCategory>();
-                foreach (var item in subCategoriesPersonal)
-                {
-                    categoryPersonal.SubCategories.Add(item);
-                }
-                await connection.UpdateWithChildrenAsync(categoryPersonal);
-
-                // Insert Transportation sub-categories
-                var subCategoriesTransportation = new List<SubCategory>()
-                                {
-                                    new SubCategory() { Name = "Petrol" },
-                                    new SubCategory() { Name = "Car Insurance" },
-                                    new SubCategory() { Name = "Repairs & Maintenance" }
-                                };
-                await connection.InsertAllAsync(subCategoriesTransportation);
-                categoryTransportation.SubCategories = new List<SubCategory>();
-                foreach (var item in subCategoriesTransportation)
-                {
-                    categoryTransportation.SubCategories.Add(item);
-                }
-                await connection.UpdateWithChildrenAsync(categoryTransportation);
-            }
-        }
-
-        public async Task<List<Category>> GetAllCategoriesAsync()
-        {
-            var connection = this.GetDbConnectionAsync();
-            var result = await connection.Table<Category>().ToListAsync();
-
-            return result;
-        }
-
-        public async void PopulateCategoriesAsync()
-        {
-            var connection = this.GetDbConnectionAsync();
-            var allCategories = await connection.Table<Category>().ToListAsync();
-
-            foreach (var category in allCategories)
-            {
-                var newCategoryViewModel = new CategoryViewModel { Name = category.Name };
-                this.ViewModel.Categories.Add(newCategoryViewModel);
-            }
-        }
-
-        public async Task<Category> GetCategoriesAsync(string categoryName)
-        {
-            var connection = this.GetDbConnectionAsync();
-            var result = await connection.Table<Category>()
-                                        .Where(x => x.Name == categoryName)
-                                        .FirstOrDefaultAsync();
-            return result;
-        }
-
-        public async Task<SubCategory> GetSubCategoriesAsync(string subCategoryName)
-        {
-            var connection = this.GetDbConnectionAsync();
-            var result = await connection.Table<SubCategory>()
-                                        .Where(x => x.Name == subCategoryName)
-                                        .FirstOrDefaultAsync();
-            return result;
-        }
-
-        public async Task<List<SubCategory>> GetSubCategoriesByIdAsync(int categoryId)
-        {
-            var connection = this.GetDbConnectionAsync();
-            var result = await connection.Table<SubCategory>()
-                                        .Where(x => x.CategoryId == categoryId)
-                                        .ToListAsync();
-            return result;
-        }
-
-        private async Task<int> InsertExpenceAsync(Expense item)
-        {
-            var connection = this.GetDbConnectionAsync();
-            var result = await connection.InsertAsync(item);
-            return result;
-        }
-
         private async void OnSaveButtonClick(object sender, RoutedEventArgs e)
         {
             if(!validAmount || !validDescription)
@@ -245,13 +56,13 @@ namespace WhereDidTheMoneyGo.Pages
                 return;
             }
 
-            var connection = this.GetDbConnectionAsync();
+            var connection = DatabaseConnections.GetDbConnectionAsync();
 
             var amount = 0.0;
             double.TryParse(this.tbAmount.Text, out amount);
             var date = this.dpDate.Date.UtcDateTime;
-            var category = await this.GetCategoriesAsync(this.tbCategory.SelectedValue.ToString());
-            var subCategory = await this.GetSubCategoriesAsync(this.tbSubCategory.SelectedValue.ToString());
+            var category = await DatabaseConnections.GetCategoriesAsync(this.tbCategory.SelectedValue.ToString()); 
+            var subCategory = await DatabaseConnections.GetSubCategoriesAsync(this.tbSubCategory.SelectedValue.ToString());
 
             if(category == null || subCategory == null)
             {
@@ -268,29 +79,10 @@ namespace WhereDidTheMoneyGo.Pages
                 ImgUrl = this.tbImageUrl.Text
             };
 
-            await this.InsertExpenceAsync(item);
+            await DatabaseConnections.InsertExpenceAsync(item);
             var message = "Category " + category.Name + " updated! :)";
             await GetNotification(message);
             this.Frame.Navigate(typeof(MainPage));
-        }
-
-        private async void OntbCategorySelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Clear current selection
-            this.tbSubCategory.SelectedIndex = -1;
-
-            // Clear the current SubCategory List
-            this.ViewModel.SubCategories.Clear();
-
-            // Add new list of sub-category items
-            this.ViewModel.CurrentCategory = this.tbCategory.SelectedValue.ToString();
-            var category = await this.GetCategoriesAsync(this.ViewModel.CurrentCategory);
-            var allSubCategories = await this.GetSubCategoriesByIdAsync(category.Id);
-            foreach (var item in allSubCategories)
-            {
-                var newSubCategoryViewModel = new SubCategoryViewModel { Name = item.Name };
-                this.ViewModel.SubCategories.Add(newSubCategoryViewModel);
-            }
         }
         
         private void AmountNotifier(object sender, KeyRoutedEventArgs e)
@@ -377,7 +169,7 @@ namespace WhereDidTheMoneyGo.Pages
             }
         }
 
-        public async static Task GetNotification(string text)
+        public static async Task GetNotification(string text)
         {
             var peshoXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText03);
             var peshoElements = peshoXml.GetElementsByTagName("text");
@@ -390,6 +182,25 @@ namespace WhereDidTheMoneyGo.Pages
         private void OnBackToMainPageClick(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(MainPage));
+        }
+
+        private async void OntbCategorySelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Clear current selection
+            this.tbSubCategory.SelectedIndex = -1;
+
+            // Clear the current SubCategory List
+            this.ViewModel.SubCategories.Clear();
+
+            // Add new list of sub-category items
+            this.ViewModel.CurrentCategory = this.tbCategory.SelectedValue.ToString();
+            var category = await DatabaseConnections.GetCategoriesAsync(this.ViewModel.CurrentCategory); 
+            var allSubCategories = await DatabaseConnections.GetSubCategoriesByIdAsync(category.Id);
+            foreach (var item in allSubCategories)
+            {
+                var newSubCategoryViewModel = new SubCategoryViewModel { Name = item.Name };
+                this.ViewModel.SubCategories.Add(newSubCategoryViewModel);
+            }
         }
     }
 }
