@@ -81,6 +81,7 @@
                            FontSize="25"                           
                            Grid.Row="0"
                            Grid.Column="0"
+                           Foreground="White"
                            FontFamily="Segoe Print"
                            Text="Where did the"/>
             <Image Source="/Assets/BagOfMoney.png"
@@ -91,6 +92,7 @@
                            FontSize="25" 
                            Grid.Row="0"
                            Grid.Column="2"
+                           Foreground="White"
                            FontFamily="Segoe Print"
                            Text="go?"/>
             <Rectangle Fill="#d5e0ff"
@@ -101,8 +103,8 @@
                         Width="50"
                         DateChanged="onDatePickerDateChanged"
                         HorizontalAlignment="Center"
-                        Background="Black"
-                        Foreground="White"
+                        Background="LightGray"
+                        FontWeight="Light"
                         Grid.ColumnSpan="3"
                         Grid.Row="1"/>
             <ListBox Name="lbMain"
@@ -144,7 +146,7 @@
     </Grid>
 
     <Page.BottomAppBar>
-        <CommandBar Background="CornflowerBlue">
+        <CommandBar>
             <AppBarButton Name="appBarButton"
                           Icon="Add"
                           Label="Add new expense"

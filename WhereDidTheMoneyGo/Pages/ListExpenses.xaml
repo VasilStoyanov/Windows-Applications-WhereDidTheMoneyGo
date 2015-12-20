@@ -64,6 +64,7 @@
                        HorizontalAlignment="Center" 
                            VerticalAlignment="Center" 
                            FontSize="25" 
+                           Foreground="White"
                            FontFamily="Segoe Print"
                            Text="All expenses"/>
         </Border>

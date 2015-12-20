@@ -105,6 +105,7 @@
     <Compile Include="DataModels\Expense.cs" />
     <Compile Include="DataModels\SubCategory.cs" />
     <Compile Include="Common\EnumerableExtensions.cs" />
+    <Compile Include="Data\DatabaseConnections.cs" />
     <Compile Include="Pages\AddNewExpence.xaml.cs">
       <DependentUpon>AddNewExpence.xaml</DependentUpon>
     </Compile>
