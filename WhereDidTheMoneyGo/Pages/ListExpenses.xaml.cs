@@ -24,7 +24,6 @@ namespace WhereDidTheMoneyGo.Pages
     public sealed partial class ListExpenses : Page
     {
         private Point initialpoint;
-        private Boolean isSwiping;
 
         public ListExpenses()
         {

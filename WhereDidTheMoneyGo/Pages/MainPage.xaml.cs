@@ -39,11 +39,11 @@ namespace WhereDidTheMoneyGo.Pages
     {
         private string reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
         private Point initialpoint;
-        private Boolean isSwiping;
 
         public MainPage()
         {
             this.InitializeComponent();
+            this.InitAsync();
 
             this.ViewModel = new MainPageViewModel();
             var showMonth = this.datePicker.Date.Month;
@@ -88,6 +88,123 @@ namespace WhereDidTheMoneyGo.Pages
             var asyncConnection = new SQLiteAsyncConnection(connectionFactory);
 
             return asyncConnection;
+        }
+
+        public async void InitAsync()
+        {
+            var connection = GetDbConnectionAsync();
+            await connection.CreateTableAsync<SubCategory>();
+            await connection.CreateTableAsync<Category>();
+            await connection.CreateTableAsync<Expense>();
+
+            var numberOfCategories = (await GetAllCategoriesAsync()).Count;
+
+            if (numberOfCategories == 0)
+            {
+                // Insert all categories
+                var categoryFood = new Category() { Name = "Food" };
+                var categoryHousing = new Category() { Name = "Housing" };
+                var categoryPersonal = new Category() { Name = "Personal" };
+                var categoryTransportation = new Category() { Name = "Transportation" };
+
+                var categories = new List<Category>()
+                                {
+                                    categoryFood,
+                                    categoryHousing,
+                                    categoryPersonal,
+                                    categoryTransportation
+                                };
+                await connection.InsertAllAsync(categories);
+
+                // Insert Food sub-categories
+                var subCategoriesFood = new List<SubCategory>()
+                                {
+                                    new SubCategory() { Name = "Groceries" },
+                                    new SubCategory() { Name = "Restaurants" },
+                                    new SubCategory() { Name = "Lunch/Snacks" },
+                                };
+                await connection.InsertAllAsync(subCategoriesFood);
+                categoryFood.SubCategories = new List<SubCategory>();
+                foreach (var item in subCategoriesFood)
+                {
+                    categoryFood.SubCategories.Add(item);
+                }
+                await connection.UpdateWithChildrenAsync(categoryFood);
+
+                // Insert Housing sub-categories
+                var subCategoriesHousing = new List<SubCategory>()
+                                {
+                                    new SubCategory() { Name = "Mortgage/Rent" },
+                                    new SubCategory() { Name = "Electricity" },
+                                    new SubCategory() { Name = "Garage" },
+                                    new SubCategory() { Name = "Water" },
+                                    new SubCategory() { Name = "TV / Internet" },
+                                    new SubCategory() { Name = "Heating" },
+                                    new SubCategory() { Name = "Maintenance & Repairs" }
+                                };
+                await connection.InsertAllAsync(subCategoriesHousing);
+                categoryHousing.SubCategories = new List<SubCategory>();
+                foreach (var item in subCategoriesHousing)
+                {
+                    categoryHousing.SubCategories.Add(item);
+                }
+                await connection.UpdateWithChildrenAsync(categoryHousing);
+
+                // Insert Personal sub-categories
+                var subCategoriesPersonal = new List<SubCategory>()
+                                {
+                                    new SubCategory() { Name = "Health" },
+                                    new SubCategory() { Name = "Beauty" },
+                                    new SubCategory() { Name = "Clothes" },
+                                    new SubCategory() { Name = "Gadgets" },
+                                    new SubCategory() { Name = "Entertainment" },
+                                    new SubCategory() { Name = "Credit card Payment" },
+                                    new SubCategory() { Name = "Gifts" },
+                                    new SubCategory() { Name = "Vacation" },
+                                    new SubCategory() { Name = "Education" },
+                                    new SubCategory() { Name = "Miscellaneous" },
+                                    new SubCategory() { Name = "Car Payment" }
+                                };
+                await connection.InsertAllAsync(subCategoriesPersonal);
+                categoryPersonal.SubCategories = new List<SubCategory>();
+                foreach (var item in subCategoriesPersonal)
+                {
+                    categoryPersonal.SubCategories.Add(item);
+                }
+                await connection.UpdateWithChildrenAsync(categoryPersonal);
+
+                // Insert Transportation sub-categories
+                var subCategoriesTransportation = new List<SubCategory>()
+                                {
+                                    new SubCategory() { Name = "Petrol" },
+                                    new SubCategory() { Name = "Car Insurance" },
+                                    new SubCategory() { Name = "Repairs & Maintenance" }
+                                };
+                await connection.InsertAllAsync(subCategoriesTransportation);
+                categoryTransportation.SubCategories = new List<SubCategory>();
+                foreach (var item in subCategoriesTransportation)
+                {
+                    categoryTransportation.SubCategories.Add(item);
+                }
+                await connection.UpdateWithChildrenAsync(categoryTransportation);
+            }
+        }
+
+        public async Task<Category> GetCategoriesAsync(string categoryName)
+        {
+            var connection = GetDbConnectionAsync();
+            var result = await connection.Table<Category>()
+                                        .Where(x => x.Name == categoryName)
+                                        .FirstOrDefaultAsync();
+            return result;
+        }
+
+        public async Task<List<Category>> GetAllCategoriesAsync()
+        {
+            var connection = GetDbConnectionAsync();
+            var result = await connection.Table<Category>().ToListAsync();
+
+            return result;
         }
 
         public async void GetAllData(int month, int year, string selectedCategory)
@@ -176,6 +293,38 @@ namespace WhereDidTheMoneyGo.Pages
                 }
             }
             return amount;
+        }
+
+
+        public async void PopulateCategoriesAsync()
+        {
+            var connection = GetDbConnectionAsync();
+            var allCategories = await connection.Table<Category>().ToListAsync();
+
+            foreach (var category in allCategories)
+            {
+                var newCategoryViewModel = new CategoryViewModel { Name = category.Name };
+                ViewModel.Categories.Add(newCategoryViewModel);
+            }
+        }
+
+        public async Task<SubCategory> GetSubCategoriesAsync(string subCategoryName)
+        {
+            var connection = GetDbConnectionAsync();
+
+            var result = await connection.Table<SubCategory>()
+                                        .Where(x => x.Name == subCategoryName)
+                                        .FirstOrDefaultAsync();
+            return result;
+        }
+
+        public async Task<List<SubCategory>> GetSubCategoriesByIdAsync(int categoryId)
+        {
+            var connection = GetDbConnectionAsync();
+            var result = await connection.Table<SubCategory>()
+                                        .Where(x => x.CategoryId == categoryId)
+                                        .ToListAsync();
+            return result;
         }
 
         private void ValidateText(object sender, KeyRoutedEventArgs e)
