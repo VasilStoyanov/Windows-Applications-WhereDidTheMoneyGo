@@ -92,12 +92,12 @@ namespace WhereDidTheMoneyGo.Pages
 
         public async void InitAsync()
         {
-            var connection = GetDbConnectionAsync();
-            await connection.CreateTableAsync<SubCategory>();
+            var connection = this.GetDbConnectionAsync();
             await connection.CreateTableAsync<Category>();
+            await connection.CreateTableAsync<SubCategory>();
             await connection.CreateTableAsync<Expense>();
 
-            var numberOfCategories = (await GetAllCategoriesAsync()).Count;
+            var numberOfCategories = (await this.GetAllCategoriesAsync()).Count;
 
             if (numberOfCategories == 0)
             {
@@ -293,7 +293,6 @@ namespace WhereDidTheMoneyGo.Pages
             }
             return amount;
         }
-
 
         public async void PopulateCategoriesAsync()
         {

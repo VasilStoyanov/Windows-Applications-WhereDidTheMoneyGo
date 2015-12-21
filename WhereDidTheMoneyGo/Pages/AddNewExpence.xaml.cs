@@ -1,12 +1,17 @@
 ﻿namespace WhereDidTheMoneyGo.Pages
 {
-    using Data;
+    using SQLite.Net;
+    using SQLite.Net.Async;
+    using SQLite.Net.Platform.WinRT;
     using System;
+    using System.Collections.Generic;
+    using System.IO;
     using System.Threading.Tasks;
     using WhereDidTheMoneyGo.AttachedProperties;
     using WhereDidTheMoneyGo.Common;
     using WhereDidTheMoneyGo.DataModels;
     using WhereDidTheMoneyGo.ViewModels;
+    using Windows.Storage;
     using Windows.UI;
     using Windows.UI.Notifications;
     using Windows.UI.Xaml;
@@ -26,9 +31,7 @@
         {
             this.InitializeComponent();
             this.ViewModel = new AddExpenseViewModel();
-            Database.ViewModel = this.ViewModel;
-            Database.InitAsync();
-            Database.PopulateCategoriesAsync();
+            this.PopulateCategoriesAsync();
 
             var oldSaveButtonValue = AnimationsProperties.GetShowHideValue(this.saveButton);
             AnimationsProperties.SetShowHideValue(this.saveButton, !oldSaveButtonValue);
@@ -47,6 +50,34 @@
             {
                 this.DataContext = value;
             }
+        }
+
+        public async void PopulateCategoriesAsync()
+        {
+            var connection = GetDbConnectionAsync();
+            var allCategories = await connection.Table<Category>().ToListAsync();
+
+            foreach (var category in allCategories)
+            {
+                var newCategoryViewModel = new CategoryViewModel { Name = category.Name };
+                ViewModel.Categories.Add(newCategoryViewModel);
+            }
+        }
+
+        public SQLiteAsyncConnection GetDbConnectionAsync()
+        {
+            var dbFilePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "db.sqlite");
+
+            var connectionFactory =
+                new Func<SQLiteConnectionWithLock>(
+                    () =>
+                    new SQLiteConnectionWithLock(
+                        new SQLitePlatformWinRT(),
+                        new SQLiteConnectionString(dbFilePath, storeDateTimeAsTicks: false)));
+
+            var asyncConnection = new SQLiteAsyncConnection(connectionFactory);
+
+            return asyncConnection;
         }
 
         private async void OnSaveButtonClick(object sender, RoutedEventArgs e)
@@ -78,13 +109,13 @@
                 return;
             }
 
-            var connection = Database.GetDbConnectionAsync();
+            var connection = this.GetDbConnectionAsync();
 
             var amount = 0.0;
             double.TryParse(this.tbAmount.Text, out amount);
             var date = this.dpDate.Date.UtcDateTime;
-            var category = await Database.GetCategoriesAsync(this.tbCategory.SelectedValue.ToString());
-            var subCategory = await Database.GetSubCategoriesAsync(this.tbSubCategory.SelectedValue.ToString());
+            var category = await this.GetCategoriesAsync(this.tbCategory.SelectedValue.ToString());
+            var subCategory = await this.GetSubCategoriesAsync(this.tbSubCategory.SelectedValue.ToString());
 
             if (category == null || subCategory == null)
             {
@@ -101,10 +132,36 @@
                 ImgUrl = this.tbImageUrl.Text
             };
 
-            await Database.InsertExpenceAsync(item);
+            await this.InsertExpenceAsync(item);
             var message = "Category " + category.Name + " updated! :)";
             await GetNotification(message);
             this.Frame.Navigate(typeof(MainPage));
+        }
+
+        public async Task<Category> GetCategoriesAsync(string categoryName)
+        {
+            var connection = GetDbConnectionAsync();
+            var result = await connection.Table<Category>()
+                                        .Where(x => x.Name == categoryName)
+                                        .FirstOrDefaultAsync();
+            return result;
+        }
+
+        public async Task<int> InsertExpenceAsync(Expense item)
+        {
+            var connection = GetDbConnectionAsync();
+            var result = await connection.InsertAsync(item);
+            return result;
+        }
+
+        public async Task<SubCategory> GetSubCategoriesAsync(string subCategoryName)
+        {
+            var connection = GetDbConnectionAsync();
+
+            var result = await connection.Table<SubCategory>()
+                                        .Where(x => x.Name == subCategoryName)
+                                        .FirstOrDefaultAsync();
+            return result;
         }
 
         private void AmountNotifier(object sender, KeyRoutedEventArgs e)
@@ -217,13 +274,23 @@
 
             // Add new list of sub-category items
             this.ViewModel.CurrentCategory = this.tbCategory.SelectedValue.ToString();
-            var category = await Database.GetCategoriesAsync(this.ViewModel.CurrentCategory);
-            var allSubCategories = await Database.GetSubCategoriesByIdAsync(category.Id);
+            var category = await this.GetCategoriesAsync(this.ViewModel.CurrentCategory);
+            var allSubCategories = await this.GetSubCategoriesByIdAsync(category.Id);
             foreach (var item in allSubCategories)
             {
                 var newSubCategoryViewModel = new SubCategoryViewModel { Name = item.Name };
                 this.ViewModel.SubCategories.Add(newSubCategoryViewModel);
             }
         }
+
+        public async Task<List<SubCategory>> GetSubCategoriesByIdAsync(int categoryId)
+        {
+            var connection = GetDbConnectionAsync();
+            var result = await connection.Table<SubCategory>()
+                                        .Where(x => x.CategoryId == categoryId)
+                                        .ToListAsync();
+            return result;
+        }
+    
     }
 }
