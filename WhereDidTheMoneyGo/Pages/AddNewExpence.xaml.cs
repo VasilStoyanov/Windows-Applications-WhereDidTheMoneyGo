@@ -19,16 +19,16 @@
         private bool validAmount;
         private bool validDescription;
         private string currentText;
-        private string reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
+        private string reasonForFailMessage = NotificationMessages.NameTooShort;
         private object lastSender;
 
         public AddNewExpence()
         {
             this.InitializeComponent();
             this.ViewModel = new AddExpenseViewModel();
-            DatabaseConnections.ViewModel = this.ViewModel;
-            DatabaseConnections.InitAsync();
-            DatabaseConnections.PopulateCategoriesAsync();
+            Database.ViewModel = this.ViewModel;
+            Database.InitAsync();
+            Database.PopulateCategoriesAsync();
 
             var oldSaveButtonValue = AnimationsProperties.GetShowHideValue(this.saveButton);
             AnimationsProperties.SetShowHideValue(this.saveButton, !oldSaveButtonValue);
@@ -51,20 +51,42 @@
 
         private async void OnSaveButtonClick(object sender, RoutedEventArgs e)
         {
-            if(!validAmount || !validDescription)
+            if (this.tbCategory.SelectedValue == null)
             {
+                reasonForFailMessage = NotificationMessages.MustSelectCategory;
+                await GetNotification(reasonForFailMessage);
                 return;
             }
 
-            var connection = DatabaseConnections.GetDbConnectionAsync();
+            if (this.tbSubCategory.SelectedValue == null)
+            {
+                reasonForFailMessage = NotificationMessages.MustSelectSubCategory;
+                await GetNotification(reasonForFailMessage);
+                return;
+            }
+
+            if (!validAmount)
+            {
+                reasonForFailMessage = NotificationMessages.AmmountTooSmall;
+                await GetNotification(reasonForFailMessage);
+                return;
+            }
+            else if (!validDescription)
+            {
+                reasonForFailMessage = NotificationMessages.NameTooShort;
+                await GetNotification(reasonForFailMessage);
+                return;
+            }
+
+            var connection = Database.GetDbConnectionAsync();
 
             var amount = 0.0;
             double.TryParse(this.tbAmount.Text, out amount);
             var date = this.dpDate.Date.UtcDateTime;
-            var category = await DatabaseConnections.GetCategoriesAsync(this.tbCategory.SelectedValue.ToString()); 
-            var subCategory = await DatabaseConnections.GetSubCategoriesAsync(this.tbSubCategory.SelectedValue.ToString());
+            var category = await Database.GetCategoriesAsync(this.tbCategory.SelectedValue.ToString());
+            var subCategory = await Database.GetSubCategoriesAsync(this.tbSubCategory.SelectedValue.ToString());
 
-            if(category == null || subCategory == null)
+            if (category == null || subCategory == null)
             {
                 return;
             }
@@ -79,30 +101,30 @@
                 ImgUrl = this.tbImageUrl.Text
             };
 
-            await DatabaseConnections.InsertExpenceAsync(item);
+            await Database.InsertExpenceAsync(item);
             var message = "Category " + category.Name + " updated! :)";
             await GetNotification(message);
             this.Frame.Navigate(typeof(MainPage));
         }
-        
+
         private void AmountNotifier(object sender, KeyRoutedEventArgs e)
         {
             this.currentText = this.tbAmount.Text;
             lastSender = this.tbAmount;
             double pesho;
-            if(double.TryParse(this.currentText, out pesho))
+            if (double.TryParse(this.currentText, out pesho))
             {
-                if(pesho >= double.MaxValue)
+                if (pesho >= double.MaxValue)
                 {
                     this.SetBorder(false);
-                    reasonForFailMessage = NotificationMessages.NotifyMessageAmmountTooBig;
+                    reasonForFailMessage = NotificationMessages.AmmountTooBig;
                     this.validAmount = false;
                     return;
                 }
                 else if (pesho <= 0)
                 {
                     this.SetBorder(false);
-                    reasonForFailMessage = NotificationMessages.NotifyMessageAmmountTooSmall;
+                    reasonForFailMessage = NotificationMessages.AmmountTooSmall;
                     this.validAmount = false;
                     return;
                 }
@@ -112,6 +134,7 @@
                 return;
             }
             this.validAmount = false;
+            this.reasonForFailMessage = NotificationMessages.AmmountShouldBeNumber;
             this.SetBorder(false);
         }
 
@@ -129,25 +152,25 @@
             {
                 this.validDescription = false;
                 SetBorder(!correct);
-                this.reasonForFailMessage = NotificationMessages.NotifyMessageForBadName;
+                this.reasonForFailMessage = NotificationMessages.BadName;
             }
             else if (text.ToLower().Contains(BadWords.FWord))
             {
                 this.validDescription = false;
                 SetBorder(!correct);
-                this.reasonForFailMessage = NotificationMessages.NotifyMessageForBadName;
+                this.reasonForFailMessage = NotificationMessages.BadName;
             }
             else if (text.Length >= DefaultValues.MaximumLengthOfCategoryName)
             {
                 this.validDescription = false;
                 SetBorder(!correct);
-                this.reasonForFailMessage = NotificationMessages.NotifyMessageTooLongName;
+                this.reasonForFailMessage = NotificationMessages.TooLongName;
             }
             else if (text.Length <= DefaultValues.MinimumLengthOfCategoryName)
             {
                 this.validDescription = false;
                 SetBorder(!correct);
-                this.reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
+                this.reasonForFailMessage = NotificationMessages.NameTooShort;
             }
             else
             {
@@ -194,8 +217,8 @@
 
             // Add new list of sub-category items
             this.ViewModel.CurrentCategory = this.tbCategory.SelectedValue.ToString();
-            var category = await DatabaseConnections.GetCategoriesAsync(this.ViewModel.CurrentCategory); 
-            var allSubCategories = await DatabaseConnections.GetSubCategoriesByIdAsync(category.Id);
+            var category = await Database.GetCategoriesAsync(this.ViewModel.CurrentCategory);
+            var allSubCategories = await Database.GetSubCategoriesByIdAsync(category.Id);
             foreach (var item in allSubCategories)
             {
                 var newSubCategoryViewModel = new SubCategoryViewModel { Name = item.Name };

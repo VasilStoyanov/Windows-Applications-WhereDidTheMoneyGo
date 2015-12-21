@@ -37,7 +37,7 @@ namespace WhereDidTheMoneyGo.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private string reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
+        private string reasonForFailMessage = DefaultValues.Error;
         private Point initialpoint;
 
         public MainPage()
@@ -256,7 +256,6 @@ namespace WhereDidTheMoneyGo.Pages
                 if (subCategory.Category.Name == selectedCategory)
                 {
                     var newSubCategoryViewModel = new SubCategoryViewModel() { Name = subCategory.Name };
-                    var amount = 0.0;
 
                     foreach (var expense in subCategory.Expenses)
                     {
@@ -428,21 +427,6 @@ namespace WhereDidTheMoneyGo.Pages
             }
         }
 
-        //private void OnShowNewCategoryMenuClick(object sender, RoutedEventArgs e)
-        //{
-        //    var oldValue = AnimationsProperties.GetShowHideValue(this.newCategory);
-        //    AnimationsProperties.SetShowHideValue(this.newCategory, !oldValue);
-
-        //    if (oldValue)
-        //    {
-        //        this.appBarButton.Icon = new SymbolIcon(Symbol.Remove);
-        //    }
-        //    else
-        //    {
-        //        this.appBarButton.Icon = new SymbolIcon(Symbol.Add);
-        //    }
-        //}
-
         private void onDatePickerDateChanged(object sender, DatePickerValueChangedEventArgs e)
         {
             this.ViewModel.Categories.Clear();
@@ -501,7 +485,7 @@ namespace WhereDidTheMoneyGo.Pages
             if (e.IsInertial)
             {
                 Point currentpoint = e.Position;
-                if (currentpoint.X - initialpoint.X >= 500)//500 is the threshold value, where you want to trigger the swipe right event
+                if (currentpoint.X - initialpoint.X >= DefaultValues.ThresholdValue)
                 {
                     e.Complete();
 
