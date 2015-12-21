@@ -12,9 +12,8 @@
     using ViewModels;
     using Windows.Storage;
     using System.Threading.Tasks;
-    using Windows.UI.Xaml.Controls;
 
-    public static class DatabaseConnections
+    public static class Database
     {
         public static AddExpenseViewModel ViewModel { get; set; }
 
@@ -83,7 +82,6 @@
                 if (subCategory.Category.Name == selectedCategory)
                 {
                     var newSubCategoryViewModel = new SubCategoryViewModel() { Name = subCategory.Name };
-                    var amount = 0.0;
 
                     foreach (var expense in subCategory.Expenses)
                     {

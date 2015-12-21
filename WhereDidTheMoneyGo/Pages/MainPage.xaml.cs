@@ -37,7 +37,7 @@ namespace WhereDidTheMoneyGo.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private string reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
+        private string reasonForFailMessage = DefaultValues.Error;
         private Point initialpoint;
         private Boolean isSwiping;
 
@@ -139,7 +139,6 @@ namespace WhereDidTheMoneyGo.Pages
                 if (subCategory.Category.Name == selectedCategory)
                 {
                     var newSubCategoryViewModel = new SubCategoryViewModel() { Name = subCategory.Name };
-                    var amount = 0.0;
 
                     foreach (var expense in subCategory.Expenses)
                     {
@@ -177,55 +176,6 @@ namespace WhereDidTheMoneyGo.Pages
             }
             return amount;
         }
-
-        private void ValidateText(object sender, KeyRoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-            //    var correct = true;
-            //    if (this.nameOfCategory.Text.ToLower().Contains(BadWords.Naughty))
-            //    {
-            //        SetBorder(!correct);
-            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageForBadName;
-            //    }
-            //    else if (this.nameOfCategory.Text.ToLower().Contains(BadWords.FWord))
-            //    {
-            //        SetBorder(!correct);
-            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageForBadName;
-            //    }
-            //    else if (this.nameOfCategory.Text.Length >= DefaultValues.MaximumLengthOfCategoryName)
-            //    {
-            //        SetBorder(!correct);
-            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageTooLongName;
-            //    }
-            //    else if (this.nameOfCategory.Text.Length <= DefaultValues.MinimumLengthOfCategoryName)
-            //    {
-            //        SetBorder(!correct);
-            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageTooShort;
-            //    }
-            //    else if(this.categoryNames.Contains(this.nameOfCategory.Text.ToLower()))
-            //    {
-            //        SetBorder(!correct);
-            //        this.reasonForFailMessage = NotificationMessages.NotifyMessageNameAlreadyExist;
-            //    }
-            //    else
-            //    {
-            //        SetBorder(correct);
-            //    }
-        }
-
-        //private void SetBorder(bool correct)
-        //{
-        //    if (correct)
-        //    {
-        //        this.nameOfCategory.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
-        //        this.categoryNameIsValid = true;
-        //    }
-        //    else
-        //    {
-        //        this.nameOfCategory.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-        //        this.categoryNameIsValid = false;
-        //    }
-        //}
 
         private void NotifyUserMessage(bool isValid, string name)
         {
@@ -278,21 +228,6 @@ namespace WhereDidTheMoneyGo.Pages
                 this.notificationBox.Text = this.reasonForFailMessage;
             }
         }
-
-        //private void OnShowNewCategoryMenuClick(object sender, RoutedEventArgs e)
-        //{
-        //    var oldValue = AnimationsProperties.GetShowHideValue(this.newCategory);
-        //    AnimationsProperties.SetShowHideValue(this.newCategory, !oldValue);
-
-        //    if (oldValue)
-        //    {
-        //        this.appBarButton.Icon = new SymbolIcon(Symbol.Remove);
-        //    }
-        //    else
-        //    {
-        //        this.appBarButton.Icon = new SymbolIcon(Symbol.Add);
-        //    }
-        //}
 
         private void onDatePickerDateChanged(object sender, DatePickerValueChangedEventArgs e)
         {
@@ -352,7 +287,7 @@ namespace WhereDidTheMoneyGo.Pages
             if (e.IsInertial)
             {
                 Point currentpoint = e.Position;
-                if (currentpoint.X - initialpoint.X >= 500)//500 is the threshold value, where you want to trigger the swipe right event
+                if (currentpoint.X - initialpoint.X >= DefaultValues.ThresholdValue)
                 {
                     e.Complete();
 
