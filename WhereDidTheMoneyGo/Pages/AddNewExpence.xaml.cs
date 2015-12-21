@@ -1,12 +1,13 @@
 ﻿namespace WhereDidTheMoneyGo.Pages
 {
-    using SQLite.Net;
-    using SQLite.Net.Async;
-    using SQLite.Net.Platform.WinRT;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
+
+    using SQLite.Net;
+    using SQLite.Net.Async;
+    using SQLite.Net.Platform.WinRT;
     using WhereDidTheMoneyGo.AttachedProperties;
     using WhereDidTheMoneyGo.Common;
     using WhereDidTheMoneyGo.DataModels;
@@ -80,64 +81,6 @@
             return asyncConnection;
         }
 
-        private async void OnSaveButtonClick(object sender, RoutedEventArgs e)
-        {
-            if (this.tbCategory.SelectedValue == null)
-            {
-                reasonForFailMessage = NotificationMessages.MustSelectCategory;
-                await GetNotification(reasonForFailMessage);
-                return;
-            }
-
-            if (this.tbSubCategory.SelectedValue == null)
-            {
-                reasonForFailMessage = NotificationMessages.MustSelectSubCategory;
-                await GetNotification(reasonForFailMessage);
-                return;
-            }
-
-            if (!validAmount)
-            {
-                reasonForFailMessage = NotificationMessages.AmmountTooSmall;
-                await GetNotification(reasonForFailMessage);
-                return;
-            }
-            else if (!validDescription)
-            {
-                reasonForFailMessage = NotificationMessages.NameTooShort;
-                await GetNotification(reasonForFailMessage);
-                return;
-            }
-
-            var connection = this.GetDbConnectionAsync();
-
-            var amount = 0.0;
-            double.TryParse(this.tbAmount.Text, out amount);
-            var date = this.dpDate.Date.UtcDateTime;
-            var category = await this.GetCategoriesAsync(this.tbCategory.SelectedValue.ToString());
-            var subCategory = await this.GetSubCategoriesAsync(this.tbSubCategory.SelectedValue.ToString());
-
-            if (category == null || subCategory == null)
-            {
-                return;
-            }
-
-            var item = new Expense
-            {
-                CategoryId = category.Id,
-                SubCategoryId = subCategory.Id,
-                Date = date,
-                Amount = amount,
-                Description = this.tbDescription.Text,
-                ImgUrl = this.tbImageUrl.Text
-            };
-
-            await this.InsertExpenceAsync(item);
-            var message = "Category " + category.Name + " updated! :)";
-            await GetNotification(message);
-            this.Frame.Navigate(typeof(MainPage));
-        }
-
         public async Task<Category> GetCategoriesAsync(string categoryName)
         {
             var connection = GetDbConnectionAsync();
@@ -161,6 +104,25 @@
             var result = await connection.Table<SubCategory>()
                                         .Where(x => x.Name == subCategoryName)
                                         .FirstOrDefaultAsync();
+            return result;
+        }
+
+        public static async Task GetNotification(string text)
+        {
+            var peshoXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText03);
+            var peshoElements = peshoXml.GetElementsByTagName("text");
+            peshoElements[0].AppendChild(peshoXml.CreateTextNode(text));
+
+            var toastNotification = new ToastNotification(peshoXml);
+            ToastNotificationManager.CreateToastNotifier().Show(toastNotification);
+        }
+
+        public async Task<List<SubCategory>> GetSubCategoriesByIdAsync(int categoryId)
+        {
+            var connection = GetDbConnectionAsync();
+            var result = await connection.Table<SubCategory>()
+                                        .Where(x => x.CategoryId == categoryId)
+                                        .ToListAsync();
             return result;
         }
 
@@ -209,7 +171,7 @@
             {
                 this.validDescription = false;
                 SetBorder(!correct);
-                this.reasonForFailMessage = NotificationMessages.BadName;
+                this.reasonForFailMessage = NotificationMessages.CannotContainBadWords;
             }
             else if (text.ToLower().Contains(BadWords.FWord))
             {
@@ -249,14 +211,61 @@
             }
         }
 
-        public static async Task GetNotification(string text)
+        private async void OnSaveButtonClick(object sender, RoutedEventArgs e)
         {
-            var peshoXml = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastText03);
-            var peshoElements = peshoXml.GetElementsByTagName("text");
-            peshoElements[0].AppendChild(peshoXml.CreateTextNode(text));
+            if (this.tbCategory.SelectedValue == null)
+            {
+                reasonForFailMessage = NotificationMessages.MustSelectCategory;
+                await GetNotification(reasonForFailMessage);
+                return;
+            }
 
-            var toastNotification = new ToastNotification(peshoXml);
-            ToastNotificationManager.CreateToastNotifier().Show(toastNotification);
+            if (this.tbSubCategory.SelectedValue == null)
+            {
+                reasonForFailMessage = NotificationMessages.MustSelectSubCategory;
+                await GetNotification(reasonForFailMessage);
+                return;
+            }
+
+            if (!validAmount)
+            {
+                reasonForFailMessage = NotificationMessages.AmmountTooSmall;
+                await GetNotification(reasonForFailMessage);
+                return;
+            }
+            else if (!validDescription)
+            {
+                reasonForFailMessage = NotificationMessages.NameTooShort;
+                await GetNotification(reasonForFailMessage);
+                return;
+            }
+
+            var connection = this.GetDbConnectionAsync();
+
+            var amount = 0.0;
+            double.TryParse(this.tbAmount.Text, out amount);
+            var date = this.dpDate.Date.UtcDateTime;
+            var category = await this.GetCategoriesAsync(this.tbCategory.SelectedValue.ToString());
+            var subCategory = await this.GetSubCategoriesAsync(this.tbSubCategory.SelectedValue.ToString());
+
+            if (category == null || subCategory == null)
+            {
+                return;
+            }
+
+            var item = new Expense
+            {
+                CategoryId = category.Id,
+                SubCategoryId = subCategory.Id,
+                Date = date,
+                Amount = amount,
+                Description = this.tbDescription.Text
+            };
+
+            await this.InsertExpenceAsync(item);
+            var message = "Category " + category.Name + " updated! :)";
+            await GetNotification(message);
+            this.Frame.Navigate(typeof(MainPage));
         }
 
         private void OnBackToMainPageClick(object sender, RoutedEventArgs e)
@@ -283,14 +292,9 @@
             }
         }
 
-        public async Task<List<SubCategory>> GetSubCategoriesByIdAsync(int categoryId)
+        private void OnBackToMainPage(object sender, RoutedEventArgs e)
         {
-            var connection = GetDbConnectionAsync();
-            var result = await connection.Table<SubCategory>()
-                                        .Where(x => x.CategoryId == categoryId)
-                                        .ToListAsync();
-            return result;
+            this.Frame.GoBack();
         }
-    
     }
 }

@@ -1,32 +1,24 @@
-﻿using SQLite.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using SQLite.Net;
 using SQLite.Net.Async;
 using SQLite.Net.Platform.WinRT;
 using SQLiteNetExtensionsAsync.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
-using System.Threading.Tasks;
 using WhereDidTheMoneyGo.AttachedProperties;
 using WhereDidTheMoneyGo.Common;
 using WhereDidTheMoneyGo.DataModels;
 using WhereDidTheMoneyGo.ViewModels;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -259,9 +251,11 @@ namespace WhereDidTheMoneyGo.Pages
 
                     foreach (var expense in subCategory.Expenses)
                     {
-                        newSubCategoryViewModel.Amount += expense.Amount;
+                        if (expense.Date.Month == month && expense.Date.Year == year)
+                        {
+                            newSubCategoryViewModel.Amount += expense.Amount;
+                        }
                     }
-
 
                     var categoriesCount = this.ViewModel.Categories.Count;
                     for (int i = 0; i < categoriesCount; i++)
@@ -359,21 +353,7 @@ namespace WhereDidTheMoneyGo.Pages
             //        SetBorder(correct);
             //    }
         }
-
-        //private void SetBorder(bool correct)
-        //{
-        //    if (correct)
-        //    {
-        //        this.nameOfCategory.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
-        //        this.categoryNameIsValid = true;
-        //    }
-        //    else
-        //    {
-        //        this.nameOfCategory.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-        //        this.categoryNameIsValid = false;
-        //    }
-        //}
-
+        
         private void NotifyUserMessage(bool isValid, string name)
         {
             if (isValid)
@@ -428,9 +408,10 @@ namespace WhereDidTheMoneyGo.Pages
 
         private void onDatePickerDateChanged(object sender, DatePickerValueChangedEventArgs e)
         {
+            var dp = sender as DatePicker;
             this.ViewModel.Categories.Clear();
-            var showMonth = this.datePicker.Date.Month;
-            var showYear = this.datePicker.Date.Year;
+            var showMonth = dp.Date.Month;
+            var showYear = dp.Date.Year;
             var selectedCategory = string.Empty;
             if (this.lbMain.SelectedItem != null)
             {
@@ -470,13 +451,13 @@ namespace WhereDidTheMoneyGo.Pages
             var category = this.lbMain.SelectedValue.ToString();
             var month = this.datePicker.Date.Month;
             var year = this.datePicker.Date.Year;
-            var expenseParameter = new ListExpensesParametersViewModel() { SelectedCategory = category, SelectedMonth = month, SelectedYear= year};
+            var expenseParameter = new ListExpensesParametersViewModel() { SelectedCategory = category, SelectedMonth = month, SelectedYear = year };
             this.Frame.Navigate(typeof(ListExpenses), expenseParameter);
         }
 
         private void lbMain_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
-                initialpoint = e.Position;
+            initialpoint = e.Position;
         }
 
         private void lbMain_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)

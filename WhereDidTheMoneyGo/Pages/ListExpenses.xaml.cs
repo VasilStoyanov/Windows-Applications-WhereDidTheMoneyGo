@@ -1,25 +1,20 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using SQLite.Net;
-using SQLite.Net.Async;
-using SQLite.Net.Platform.WinRT;
-using SQLiteNetExtensionsAsync.Extensions;
-using WhereDidTheMoneyGo.DataModels;
-using WhereDidTheMoneyGo.ViewModels;
-using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using Windows.Foundation;
-
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
-namespace WhereDidTheMoneyGo.Pages
+﻿namespace WhereDidTheMoneyGo.Pages
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+    using System;
+    using System.IO;
+
+    using SQLite.Net;
+    using SQLite.Net.Async;
+    using SQLite.Net.Platform.WinRT;
+    using SQLiteNetExtensionsAsync.Extensions;
+    using WhereDidTheMoneyGo.DataModels;
+    using WhereDidTheMoneyGo.ViewModels;
+    using Windows.Foundation;
+    using Windows.Storage;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
+    using Windows.UI.Xaml.Navigation;
+    using Common;
     public sealed partial class ListExpenses : Page
     {
         private Point initialpoint;
@@ -58,7 +53,7 @@ namespace WhereDidTheMoneyGo.Pages
                     this.ViewModel.Expenses.Add(new ExpenceViewModel()
                     {
                         Id = item.Id,
-                        Date = item.Date,
+                        Date = item.Date.ToString("dd MMMM yyyy"),
                         Category = item.Category.Name,
                         SubCategory = item.SubCategory.Name,
                         Description = item.Description,
@@ -84,16 +79,16 @@ namespace WhereDidTheMoneyGo.Pages
             return asyncConnection;
         }
 
-        private void OnBackToMainPage(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(MainPage));
-        }
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             var parameters = e.Parameter as ListExpensesParametersViewModel;
             this.GetAllData(parameters);
             this.ViewModel.SelectedParameters = $"Cateory '{parameters.SelectedCategory}', {parameters.SelectedMonth}.{parameters.SelectedYear}";
+        }
+
+        private void OnBackToMainPage(object sender, RoutedEventArgs e)
+        {
+            this.Frame.GoBack();
         }
 
         private void ListBox_DoubleTapped(object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
@@ -112,13 +107,18 @@ namespace WhereDidTheMoneyGo.Pages
             if (e.IsInertial)
             {
                 Point currentpoint = e.Position;
-                if (initialpoint.X - currentpoint.X >= 500)//500 is the threshold value, where you want to trigger the swipe right event
+                if (initialpoint.X - currentpoint.X >= DefaultValues.ThresholdValue)
                 {
                     e.Complete();
                     
                     this.Frame.Navigate(typeof(MainPage));
                 }
             }
+        }
+
+        private void OnNewExpenceAddClick(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(AddNewExpence));
         }
     }
 }

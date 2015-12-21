@@ -34,7 +34,8 @@
                                Grid.Column="1"
                                FontWeight="Normal"
                                FontStyle="Italic"
-                               Text="{Binding Date}"                              
+                               Text="{Binding Date}"   
+                               HorizontalAlignment="Center"
                                Style="{StaticResource AmountsTextBoxStyle}"/>
                     </Border>
                     <Border Style="{StaticResource BorderStyle}" Grid.Row="0"
@@ -55,7 +56,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Border  Background="CornflowerBlue">
@@ -84,15 +85,19 @@
             <TextBlock Grid.Row="0"
                                Grid.Column="0"
                                Text="Description"
+                                Margin="10,0,0,0"
                                Style="{StaticResource CategoriesTextBoxStyle}"/>
 
             <TextBlock Grid.Row="0"
                                Grid.Column="1"
-                               Text="Date"                              
+                               Text="Date"   
+                               HorizontalAlignment="Center"
                                Style="{StaticResource AmountsTextBoxStyle}"/>
             <TextBlock Grid.Row="0"
                                Grid.Column="2"
-                               Text="Amount"                              
+                               Text="Amount"       
+                                Margin="0,0,10,0"
+                       
                                Style="{StaticResource AmountsTextBoxStyle}"/>
         </Grid>
         <ListBox Grid.Row="3" 
@@ -144,6 +149,10 @@
             <AppBarButton Icon="Back"
                           Label="New category"
                           Click="OnBackToMainPage"/>
+            <AppBarButton Name="appBarButton"
+                          Icon="Add"
+                          Label="Add new expense"
+                          Click="OnNewExpenceAddClick"/>
         </CommandBar>
     </Page.BottomAppBar>
 

@@ -127,22 +127,6 @@
 
         </Grid>
 
-        <!--Add new Category-->
-        <!--<Grid Grid.Row="2"
-              Name="newCategory"
-              VerticalAlignment="Bottom" 
-              Background="CornflowerBlue"
-              Visibility="Collapsed"
-              attachedProperties:AnimationsProperties.ShowHideValue="True">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="2*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="8.5*"/>
-                <ColumnDefinition Width="1.5*"/>
-            </Grid.ColumnDefinitions>
-        </Grid>-->
     </Grid>
 
     <Page.BottomAppBar>

@@ -30,9 +30,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="222*"/>
-            <RowDefinition Height="221*"/>
-            <RowDefinition Height="147*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Border Background="CornflowerBlue">
             <TextBlock Name="tbPageTitle" 
@@ -42,9 +40,9 @@
                            FontSize="25" 
                        Foreground="White"
                            FontFamily="Segoe Print"
-                           Text="Add expence"/>
+                           Text="Add expense"/>
         </Border>
-        <StackPanel Grid.Row="1" Margin="0,0,0,147" Grid.RowSpan="3">
+        <!--<StackPanel Grid.Row="1" Margin="0,0,0,147" Grid.RowSpan="3">-->
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -59,18 +57,20 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="Date"
                            Grid.Row="0" Grid.Column="0"
+                           Margin="10,0,0,0"
                            Style="{StaticResource Label}"/>
-                <DatePicker Name="dpDate" Grid.Row="0" Grid.Column="1"/>
+                <DatePicker Name="dpDate" Grid.Row="0" Grid.Column="1"
+                            Margin="0,0,10,0"/>
 
                 <TextBlock Text="Category"
                            Grid.Row="1"
                            Grid.Column="0"
                            Grid.ColumnSpan="2"
+                           Margin="10,0,0,0"
                            Style="{StaticResource Label}"/>
                 <ComboBox Name="tbCategory" 
                           ItemsSource="{Binding Categories}" 
@@ -78,35 +78,42 @@
                           SelectedValuePath="Name"
                           SelectionChanged="OntbCategorySelectionChanged"
                           PlaceholderText="Select category" 
-                          VerticalAlignment="Stretch"
+                          VerticalAlignment="Center"
                           HorizontalAlignment="Stretch"
+                          Margin="0,0,10,0"
                           Grid.Row="1" 
                           Grid.Column="1" />
 
                 <TextBlock Text="SubCategory"
                            Grid.Row="2" 
                            Grid.Column="0"
+                           Margin="10,0,0,0"
                            Style="{StaticResource Label}"/>
                 <ComboBox Name="tbSubCategory" 
                           ItemsSource="{Binding SubCategories}" 
                           ItemTemplate="{StaticResource SubCategoriesDataTemplate}" 
                           SelectedValuePath="Name"
                           PlaceholderText="Select subcategory" 
-                          VerticalAlignment="Stretch"
+                          VerticalAlignment="Center"
                           HorizontalAlignment="Stretch"
+                          Margin="0,0,10,0"
                           Grid.Row="2" Grid.Column="1"/>
 
                 <TextBlock Text="Amount"
                            Grid.Row="4"
                            Grid.Column="0"
+                           Margin="10,0,0,0"
                            Style="{StaticResource Label}"/>
                 <TextBox Name="tbAmount" 
                          PlaceholderText="Add Amount" 
                          Grid.Row="4"
                          Grid.Column="1"
+                         Margin="0,0,10,0"
+                         VerticalAlignment="Center"
                          KeyUp="AmountNotifier"/>
 
                 <TextBlock Text="Description"
+                           Margin="10,0,0,0"
                            Grid.Row="3" Grid.Column="0"
                            FontWeight="Bold"
                            Style="{StaticResource Label}"/>
@@ -114,18 +121,11 @@
                 <TextBox Name="tbDescription" 
                          PlaceholderText="Add expense description" 
                          KeyUp="DescriptionNotifier"
+                         VerticalAlignment="Center"
+                         Margin="0,0,10,0"
                          Grid.Row="3" Grid.Column="1"/>
-
-                <TextBlock Text="Image"
-                           Visibility="Collapsed"
-                           Grid.Row="5" Grid.Column="0"
-                           Style="{StaticResource Label}"/>
-
-                <TextBox Name="tbImageUrl"
-                         Visibility="Collapsed"
-                         PlaceholderText="Add Image"
-                         Grid.Row="5" Grid.Column="1"/>
-                <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3">
+            <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3">
+                <Grid >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4.5*"/>
                         <ColumnDefinition Width="1*"/>
@@ -134,29 +134,43 @@
                     <Button Name="saveButton"
                         Visibility="Collapsed"
                         Content="Save"
+                        FontSize="20"
                         Click="OnSaveButtonClick"
                         HorizontalAlignment="Stretch"
+                        Margin="0,20,50,0"
                         Grid.Row="0" Grid.Column="2"
-                        Background="#66ffcc"
-                        BorderBrush="#00ffaa"
-                        BorderThickness="5"
-                        Margin="0,50,0,0"/>
+                        Height="40"
+                        MinWidth="100"
+                        Background="#00cc00"
+                        BorderBrush="#009900"
+                        BorderThickness="1"
+                        Foreground="White"/>
 
                     <Button Name="backButton"
                         Visibility="Collapsed"
+                        FontSize="20"
                         Content="Cancel"
                         Click="OnBackToMainPageClick"
                         HorizontalAlignment="Stretch"
+                        Height="40"
+                        Margin="50,20,0,0"
+                        MinWidth="100"
                         Grid.Row="0" Grid.Column="0"
-                        Background="#3399ff"
-                        BorderBrush="#0073e6"
-                        BorderThickness="5"
-                        Margin="0,50,0,0"/>
+                        Background="#cc0000"
+                        BorderBrush="#b30000"
+                        BorderThickness="1"
+                        Foreground="White"/>
                 </Grid>
-            </Grid>
-        </StackPanel>
-        <StackPanel Grid.Row="3" Margin="0,0.333,0,0">
-            <TextBlock Name="tbExpenseLIst"/>
-        </StackPanel>
+            </StackPanel>
+        </Grid>
+        <!--</StackPanel>-->
     </Grid>
+
+    <Page.BottomAppBar>
+        <CommandBar ClosedDisplayMode="Compact">
+            <AppBarButton Icon="Back"
+                          Label="New category"
+                          Click="OnBackToMainPage"/>
+        </CommandBar>
+    </Page.BottomAppBar>
 </Page>
